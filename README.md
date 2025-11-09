@@ -1,4 +1,4 @@
-# Gatyah 
+# Gatyah - Smart Mobility & Environmental Intelligence
 
 A Flask application with **MongoDB** database integration for urban analytics, traffic patterns, and eco-friendly route planning.
 
