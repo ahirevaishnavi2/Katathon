@@ -1,6 +1,54 @@
-# Gatyah - Smart Mobility & Environmental Intelligence
+# Gatyah - Where Motion is Intelligent
+### **Overview**
 
-A Flask application with **MongoDB** database integration for urban analytics, traffic patterns, and eco-friendly route planning.
+**Gyatah**  is an **AI-driven, real-time geo-intelligence platform** that analyzes traffic, mobility, and environmental data to build smarter, greener cities.  
+It blends **AI + ML analytics**, **TomTom APIs**, and **gamified sustainability mechanics** to create a dual-layer ecosystem for both citizens and experts — making urban mobility intelligent, data-driven, and eco-conscious.
+
+---
+
+## 🚦 **Core Idea**
+
+Gyatah empowers users and planners to visualize, predict, and optimize urban flow and environmental impact:
+
+- **Citizens** get real-time eco-friendly route suggestions, AQI insights, and rewards for green behavior.  
+- **Experts & Planners** get dashboards with heatmaps, ML analytics, and predictive environmental correlations.
+
+> “Gyatah — Where Motion is Intelligent.”
+
+---
+
+## 🧠 **Key Features**
+
+### 🌐 **Citizen Mobile App**
+
+- **Live Map Feed:** Real-time AQI, noise, traffic levels, and nearby POIs using TomTom APIs.  
+- **Eco Route Planner:** Compares eco-friendly vs. fastest routes with CO₂ savings.  
+- **Eco Points & Gamification:**  
+  - +50 → Public Transport  
+  - +30 → Shared Travel  
+  - +25 → Off-Peak Travel  
+  - +100 → Community Participation  
+- **FOMO-driven Sustainability:** Encourages users to maintain high Eco Scores — just like fitness streaks and social badges.  
+- **Community & Leaderboard:** Engage, share, and compete in eco-challenges.  
+- **AI Chatbot Assistant:** OpenAI-powered guide for mobility, environment, and sustainability queries.
+
+---
+
+### 🏙️ **Expert Web Dashboard**
+
+- **Dual Mode Integration:**  
+  - *Citizen View:* Simplified, emoji-based eco-map.  
+  - *Expert View:* Analytical dashboard with visualized insights.  
+- **Central Eco-Dashboard:** Tracks active sensors, cognition alerts, and environmental correlations.  
+- **ML Analytics Suite:**  
+  - Traffic Prediction vs. Actual  
+  - AQI vs. Traffic Correlation  
+  - Weekly Peak-Hour Patterns  
+  - Noise & Pollution Heatmaps  
+- **Reports & Analytics:** Data-driven conclusions for Smart City & policy interventions.
+
+---
+
 
 ## Features
 
@@ -11,6 +59,32 @@ A Flask application with **MongoDB** database integration for urban analytics, t
 - **Eco Points System** - Gamified rewards for eco-friendly actions
 - **Community Feed** - User-generated posts and upvotes
 - **Leaderboard** - Top eco-commuters ranking
+
+
+---
+
+## 🧩 **Tech Stack**
+
+| Layer             | Technology                                    |
+| ----------------- | --------------------------------------------- |
+| **Frontend**      | HTML5, CSS3, JavaScript, TypeScript           |
+| **Backend**       | Flask (Python)                                |
+| **Database**      | MongoDB                                       |
+| **APIs**          | TomTom (Maps, POI, Routing, Traffic), OpenAI  |
+| **ML/AI**         | KNN, K-Means, CNN, Regression, Apriori        |
+| **Visualization** | Interactive Heatmaps, Circular Gauges, Charts |
+
+---
+
+## 💡 **Unique Selling Points (USP)**
+
+- **Dual-Mode Ecosystem:** Citizen simplicity + Expert analytics in one unified system.  
+- **FOMO-Driven Sustainability:** Turns eco-behavior into social competition — green FOMO for lasting impact.  
+- **AI + ML Intelligence:** Predicts congestion and pollution *before* they occur.  
+- **GeoSense Integration:** Real-time data fusion from TomTom, AQI sensors, and mobility APIs.  
+- **Sustainability Credit System:** Transforms eco-actions into socially visible achievements.
+
+---
 
 ## Prerequisites
 
@@ -93,87 +167,35 @@ python app.py
 The app will run on `http://localhost:5000`
 
 
-## Database Schema
 
-The app creates these tables automatically:
+## 📊 **Datasets Used**
+- [Vehicle Emission Dataset](https://www.kaggle.com/datasets/s3programmer/vehcle-emission-dataset)  
+- [Air Pollution Data of India (2020–2023)](https://www.kaggle.com/datasets/seshupavan/air-pollution-data-of-india-2020-2023)  
+- [AQI Air Quality Index Dataset](https://www.kaggle.com/datasets/azminetoushikwasi/aqi-air-quality-index-scheduled-daily-update)
 
-- **users** - User profiles, eco points, green scores
-- **badges** - Earned badges
-- **community_posts** - User posts
-- **location_analytics** - Location pattern analysis
-- **user_routes** - Saved routes
+---
 
-community posts exist
+## 🚀 **Demo & Repository**
+
+- **Mobile App Demo:** [View Demo](https://drive.google.com/file/d/13FUB_BTgj8aNR-Fe4f_Goq0LWL2ZD5Vc/view?usp=drive_link)  
+- **Website Demo:** [View Demo](https://drive.google.com/file/d/1HQcChlEwSWkaLwUpcOrgU_Qo-Zf1q2rO/view?usp=sharing)   
+- **Demo Video Folder:** [Google Drive](https://drive.google.com/drive/folders/1WPglLx0PNMoKTtQnBXeq91NgMV_8fMQL?usp=drive_link)
+
+---
+## 👩‍💻 **Team Gyatah**
 
 
-# GeoSense+ | AI-Powered Urban Analytics Platform
+| Name | Department | City |
+|------|-------------|------|
+| **Aarya Kulkarni** | ENTC (2903) | Pune-27 |
+| **Vaishnavi Ahire** | Comp (2851) | Pune-27 |
+| **Shivanshi Gupta** | DS (1386) | Mumbai-26 |
+| **Pranjal Mohite** | AI & DS (2718) | Pune-26 |
+| **Prerna Pal** | DS (1368) | Mumbai-26 |
 
-## Overview
-GeoSense+ is an advanced location-based analytics platform that uses AI/ML and TomTom APIs to analyze urban areas, traffic patterns, environmental metrics, and mobility data. The platform features predictive analytics, an AI chatbot, gamified eco-rewards, and dual-mode visualization for both citizens and urban planning experts.
+---
 
-## Recent Changes (November 6, 2025)
-- Initial project setup with Flask backend and responsive frontend
-- Integrated TomTom APIs for Maps, Search, Routing, and Traffic analysis
-- Implemented ML-based pattern recognition using scikit-learn (K-means clustering)
-- Created AI chatbot using OpenAI API for conversational queries
-- Built gamification system with eco-points, badges, and leaderboards
-- Designed dual-mode interactive map (Citizen mode: emoji-based, Expert mode: detailed layers)
-- Developed PostgreSQL database schema for users, badges, posts, and analytics
-- Created mobile-responsive UI with circular gauges and real-time metrics
+**“Where Motion is Intelligent.”**  
+Built with passion by innovators striving for **sustainable urban intelligence**.
 
-## Project Architecture
-
-### Tech Stack
-- **Frontend**: HTML5, CSS3, JavaScript, Leaflet.js for mapping
-- **Backend**: Flask (Python)
-- **Database**: PostgreSQL (Neon-backed Replit database)
-- **APIs**: TomTom (Maps, Search, Routing, Traffic), OpenAI (GPT-3.5)
-- **ML/AI**: scikit-learn (clustering, pattern analysis), pandas, numpy
-
-### Key Features
-1. **Location Analysis**: TomTom API integration for POI search, route planning, and traffic data
-2. **ML Pattern Recognition**: K-means clustering to identify urban zones (busy/moderate/calm)
-3. **AI Insights**: OpenAI-powered chatbot and contextual recommendations
-4. **Eco-Dashboard**: Real-time AQI, noise, traffic metrics with circular gauges
-5. **Route Planning**: Eco-friendly vs fastest routes with CO₂ savings calculation
-6. **Gamification**: Points, badges, streaks, and leaderboards
-7. **Community Feed**: User posts, upvotes, eco-route sharing
-8. **Dual-Mode Map**: Citizen (simple, emoji-based) and Expert (detailed layers)
-
-### Database Schema
-- `users`: User profiles, eco-points, green scores, streaks
-- `badges`: Achievement tracking with icons and timestamps
-- `community_posts`: User-generated content with location tags
-- `location_analytics`: ML-analyzed location patterns and traffic data
-- `user_routes`: Route history with eco-points earned
-
-### API Integration
-- **TomTom Search API**: POI discovery and location search
-- **TomTom Routing API**: Route calculation with eco-friendly options
-- **TomTom Traffic API**: Real-time traffic flow data (integrated in routing)
-- **OpenAI API**: Chatbot responses and AI-generated insights
-
-### ML Components
-- Clustering algorithm for zone identification
-- Traffic pattern analysis with time-based predictions
-- Predictive analytics for busy hours and calm zones
-
-## Environment Setup
-Required environment variables:
-- `DATABASE_URL`: PostgreSQL connection string (auto-configured)
-- `SESSION_SECRET`: Flask session encryption key (auto-configured)
-- `OPENAI_API_KEY`: For AI chatbot (optional, has fallback)
-- `TOMTOM_API_KEY`: For maps and routing (optional, has mock data fallback)
-
-## User Preferences
-- Focus on AI/ML implementation and real-world data integration
-- Mobile-responsive design with simple, intuitive UI
-- Gamification to encourage eco-friendly behavior
-- Both technical (expert) and casual (citizen) user interfaces
-
-## Development Notes
-- Mock data fallbacks ensure the platform works without API keys for demo purposes
-- Real TomTom integration requires TOMTOM_API_KEY environment variable
-- AI chatbot uses OpenAI when OPENAI_API_KEY is provided, otherwise uses smart fallbacks
-- Database initializes automatically on first run
-- Frontend uses Leaflet.js with OpenStreetMap tiles for map visualization
+---
