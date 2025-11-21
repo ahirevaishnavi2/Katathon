@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gyatah - Urban Anomaly Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <style>
+      /* Keep all your existing CSS styles */
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --accent-color: #e74c3c;
+        --light-color: #ecf0f1;
+        --dark-color: #2c3e50;
+        --success-color: #27ae60;
+        --warning-color: #f39c12;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: #f5f7fa;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      header {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        color: white;
+        padding: 20px 0;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .logo h1 {
+        font-size: 2rem;
+        font-weight: 700;
+      }
+
+      .logo-icon {
+        font-size: 2.5rem;
+      }
+
+      .controls {
+        display: flex;
+        gap: 10px;
+      }
+
+      button {
+        background-color: var(--secondary-color);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      button:hover {
+        background-color: var(--primary-color);
+        transform: translateY(-2px);
+      }
+
+      button:disabled {
+        background-color: #bdc3c7;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .dashboard {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 20px;
+      }
+
+      .card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .card-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--primary-color);
+      }
+
+      .overview {
+        grid-column: span 4;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .stat-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        background: var(--light-color);
+        border-radius: 8px;
+      }
+
+      .stat-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-color);
+      }
+
+      .stat-label {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+      }
+
+      .timeseries {
+        grid-column: span 8;
+      }
+
+      .chart-container {
+        height: 400px;
+        width: 100%;
+      }
+
+      .anomalies {
+        grid-column: span 6;
+      }
+
+      .predictions {
+        grid-column: span 6;
+      }
+
+      .alert-banner {
+        background-color: var(--accent-color);
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .warning-banner {
+        background-color: var(--warning-color);
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .alert-icon {
+        font-size: 1.5rem;
+      }
+
+      .alert-content h3 {
+        margin-bottom: 5px;
+      }
+
+      .alert-content p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .anomaly-list {
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .anomaly-item {
+        padding: 10px 15px;
+        border-left: 4px solid var(--accent-color);
+        background-color: #fdf2f2;
+        margin-bottom: 10px;
+        border-radius: 0 5px 5px 0;
+      }
+
+      .anomaly-time {
+        font-weight: 600;
+        color: var(--dark-color);
+      }
+
+      .anomaly-signal {
+        color: var(--accent-color);
+        font-size: 0.9rem;
+      }
+
+      .anomaly-value {
+        font-weight: 600;
+        margin-top: 5px;
+        font-size: 0.9rem;
+      }
+
+      .prediction-item {
+        padding: 10px 15px;
+        border-left: 4px solid var(--warning-color);
+        background-color: #fef9e7;
+        margin-bottom: 10px;
+        border-radius: 0 5px 5px 0;
+      }
+
+      .prediction-time {
+        font-weight: 600;
+        color: var(--dark-color);
+      }
+
+      .prediction-signal {
+        color: var(--warning-color);
+        font-size: 0.9rem;
+      }
+
+      .prediction-value {
+        font-weight: 600;
+        margin-top: 5px;
+        font-size: 0.9rem;
+      }
+
+      .signal-selector {
+        grid-column: span 12;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+
+      .signal-btn {
+        background-color: var(--light-color);
+        color: var(--dark-color);
+        border: 1px solid #ddd;
+        padding: 8px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .signal-btn.active {
+        background-color: var(--secondary-color);
+        color: white;
+        border-color: var(--secondary-color);
+      }
+
+      .config-panel {
+        grid-column: span 12;
+        padding: 20px;
+        border: 2px dashed #ddd;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: var(--primary-color);
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+
+      .form-col {
+        flex: 1;
+      }
+
+      .file-upload {
+        padding: 15px;
+        border: 2px dashed #bdc3c7;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 15px;
+      }
+
+      .file-upload input {
+        display: none;
+      }
+
+      .file-upload label {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: var(--secondary-color);
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .file-upload label:hover {
+        background-color: var(--primary-color);
+      }
+
+      .file-info {
+        margin-top: 10px;
+        font-size: 0.9rem;
+        color: #7f8c8d;
+      }
+
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .checkbox-group input {
+        width: auto;
+      }
+
+      .status-indicator {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+
+      .status-running {
+        background-color: var(--warning-color);
+        animation: pulse 1.5s infinite;
+      }
+
+      .status-ready {
+        background-color: var(--success-color);
+      }
+
+      .status-error {
+        background-color: var(--accent-color);
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 30px;
+        padding: 20px;
+        color: #7f8c8d;
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 1200px) {
+        .overview,
+        .timeseries {
+          grid-column: span 12;
+        }
+
+        .anomalies,
+        .predictions {
+          grid-column: span 12;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .header-content {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .controls {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .form-row {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="header-content">
+          <div class="logo">
+            <div class="logo-icon">🌆</div>
+            <h1>Gyatah - Urban Anomaly Dashboard</h1>
+          </div>
+          <div class="controls">
+            <button id="run-analysis" onclick="runAnalysis()">
+              Run Analysis
+            </button>
+            <button id="refresh-data" onclick="loadResults()">
+              Refresh Results
+            </button>
+            <button id="export-pdf">Export PDF Report</button>
+          </div>
+        </div>
+      </header>
+
+      <div class="dashboard">
+        <div class="config-panel card">
+          <div class="card-header">
+            <h2 class="card-title">Analysis Configuration</h2>
+            <div id="analysis-status">
+              <span class="status-indicator status-ready"></span>
+              <span>Ready</span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col">
+              <div class="file-upload">
+                <h4>Pune Smart City Dataset</h4>
+                <input type="file" id="pune-file" accept=".csv" />
+                <label for="pune-file">Upload Pune CSV</label>
+                <div class="file-info" id="pune-file-info">
+                  No file selected (will use demo data)
+                </div>
+              </div>
+            </div>
+
+            <div class="form-col">
+              <div class="file-upload">
+                <h4>Indian AQI Dataset</h4>
+                <input type="file" id="aqi-file" accept=".csv" />
+                <label for="aqi-file">Upload AQI CSV</label>
+                <div class="file-info" id="aqi-file-info">
+                  No file selected (will use demo data)
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="z-threshold"
+                  >Z-Score Threshold (default: 3.0)</label
+                >
+                <input
+                  type="number"
+                  id="z-threshold"
+                  step="0.1"
+                  min="1"
+                  max="10"
+                  value="3.0"
+                />
+              </div>
+            </div>
+
+            <div class="form-col">
+              <div class="form-group">
+                <label for="rel-threshold"
+                  >Relative Jump Threshold (0-1, default: 0.6)</label
+                >
+                <input
+                  type="number"
+                  id="rel-threshold"
+                  step="0.1"
+                  min="0"
+                  max="1"
+                  value="0.6"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col">
+              <div class="checkbox-group">
+                <input type="checkbox" id="run-prediction" checked />
+                <label for="run-prediction"
+                  >Run Upcoming Anomaly Prediction</label
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row" id="prediction-settings">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="horizon"
+                  >Forecast Horizon (hours, default: 6)</label
+                >
+                <input type="number" id="horizon" min="1" max="48" value="6" />
+              </div>
+            </div>
+
+            <div class="form-col">
+              <div class="form-group">
+                <label for="window-start"
+                  >Alert Window Start (hours ahead, default: 7)</label
+                >
+                <input
+                  type="number"
+                  id="window-start"
+                  min="1"
+                  max="48"
+                  value="7"
+                />
+              </div>
+            </div>
+
+            <div class="form-col">
+              <div class="form-group">
+                <label for="window-end"
+                  >Alert Window End (hours ahead, default: 12)</label
+                >
+                <input
+                  type="number"
+                  id="window-end"
+                  min="1"
+                  max="48"
+                  value="12"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="overview card">
+          <div class="card-header">
+            <h2 class="card-title">Overview</h2>
+          </div>
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">Total Anomalies Detected</div>
+              <div class="stat-value" id="total-anomalies">-</div>
+            </div>
+            <div class="stat-icon">⚠️</div>
+          </div>
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">Upcoming Predictions</div>
+              <div class="stat-value" id="total-predictions">-</div>
+            </div>
+            <div class="stat-icon">🔮</div>
+          </div>
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">Most Affected Signal</div>
+              <div class="stat-value" id="top-signal">-</div>
+            </div>
+            <div class="stat-icon">📊</div>
+          </div>
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">Data Time Range</div>
+              <div class="stat-value" id="time-range">-</div>
+            </div>
+            <div class="stat-icon">⏱️</div>
+          </div>
+        </div>
+
+        <div class="timeseries card">
+          <div class="card-header">
+            <h2 class="card-title">Time Series Analysis</h2>
+            <select id="signal-select">
+              <option value="PM2.5">PM2.5</option>
+              <option value="traffic_count">Traffic Count</option>
+              <option value="AQI">AQI</option>
+              <option value="PM10">PM10</option>
+            </select>
+          </div>
+          <div class="chart-container" id="timeseries-chart">
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                color: #7f8c8d;
+              "
+            >
+              Run analysis to see time series data
+            </div>
+          </div>
+        </div>
+
+        <div class="signal-selector">
+          <div class="signal-btn active" data-signal="PM2.5">PM2.5</div>
+          <div class="signal-btn" data-signal="traffic_count">Traffic</div>
+          <div class="signal-btn" data-signal="AQI">AQI</div>
+          <div class="signal-btn" data-signal="PM10">PM10</div>
+          <div class="signal-btn" data-signal="NO2">NO2</div>
+          <div class="signal-btn" data-signal="SOUND">Sound</div>
+        </div>
+
+        <div class="anomalies card">
+          <div class="card-header">
+            <h2 class="card-title">Detected Anomalies</h2>
+            <button id="view-all-anomalies">View All</button>
+          </div>
+          <div class="anomaly-list" id="anomaly-list">
+            <div style="text-align: center; color: #7f8c8d; padding: 20px">
+              No anomalies detected yet. Run analysis to see results.
+            </div>
+          </div>
+        </div>
+
+        <div class="predictions card">
+          <div class="card-header">
+            <h2 class="card-title">Upcoming Anomaly Predictions</h2>
+            <button id="view-all-predictions">View All</button>
+          </div>
+          <div id="alert-container"></div>
+          <div class="anomaly-list" id="prediction-list">
+            <div style="text-align: center; color: #7f8c8d; padding: 20px">
+              No predictions available. Run analysis with prediction enabled.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <p>
+          Gyatah Urban Anomaly Engine | Generated on
+          <span id="current-date"></span>
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      // Global variables
+      let anomaliesData = [];
+      let predictionsData = [];
+      let currentSignal = "PM2.5";
+      let analysisRunning = false;
+      let statusCheckInterval = null;
+
+      // Initialize the dashboard
+      document.addEventListener("DOMContentLoaded", function () {
+        // Set current date
+        document.getElementById("current-date").textContent =
+          new Date().toLocaleDateString();
+
+        // Set up event listeners
+        document
+          .getElementById("pune-file")
+          .addEventListener("change", handleFileSelect);
+        document
+          .getElementById("aqi-file")
+          .addEventListener("change", handleFileSelect);
+        document
+          .getElementById("run-prediction")
+          .addEventListener("change", togglePredictionSettings);
+        document
+          .getElementById("view-all-anomalies")
+          .addEventListener("click", viewAllAnomalies);
+        document
+          .getElementById("view-all-predictions")
+          .addEventListener("click", viewAllPredictions);
+        document
+          .getElementById("export-pdf")
+          .addEventListener("click", exportPDF);
+
+        // Signal selector buttons
+        document.querySelectorAll(".signal-btn").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            document
+              .querySelectorAll(".signal-btn")
+              .forEach((b) => b.classList.remove("active"));
+            this.classList.add("active");
+            currentSignal = this.getAttribute("data-signal");
+            updateTimeSeriesChart();
+          });
+        });
+
+        // Signal select dropdown
+        document
+          .getElementById("signal-select")
+          .addEventListener("change", function () {
+            currentSignal = this.value;
+            updateTimeSeriesChart();
+          });
+
+        // Initial setup
+        togglePredictionSettings();
+        loadResults(); // Load any existing results on page load
+      });
+
+      // Handle file selection
+      function handleFileSelect(event) {
+        const file = event.target.files[0];
+        const fileInfoId = event.target.id + "-info";
+
+        if (file) {
+          document.getElementById(fileInfoId).textContent = `Selected: ${
+            file.name
+          } (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+        } else {
+          document.getElementById(fileInfoId).textContent =
+            "No file selected (will use demo data)";
+        }
+      }
+
+      // Toggle prediction settings visibility
+      function togglePredictionSettings() {
+        const predictionChecked =
+          document.getElementById("run-prediction").checked;
+        document.getElementById("prediction-settings").style.display =
+          predictionChecked ? "flex" : "none";
+      }
+
+      // Run analysis with current parameters
+      async function runAnalysis() {
+        if (analysisRunning) {
+          alert("Analysis is already running. Please wait...");
+          return;
+        }
+
+        // Get form values
+        const formData = new FormData();
+        formData.append(
+          "z_threshold",
+          document.getElementById("z-threshold").value
+        );
+        formData.append(
+          "rel_threshold",
+          document.getElementById("rel-threshold").value
+        );
+        formData.append(
+          "run_prediction",
+          document.getElementById("run-prediction").checked
+        );
+        formData.append("horizon", document.getElementById("horizon").value);
+        formData.append(
+          "window_start",
+          document.getElementById("window-start").value
+        );
+        formData.append(
+          "window_end",
+          document.getElementById("window-end").value
+        );
+
+        // Add files if selected
+        const puneFile = document.getElementById("pune-file").files[0];
+        const aqiFile = document.getElementById("aqi-file").files[0];
+
+        if (puneFile) formData.append("pune_file", puneFile);
+        if (aqiFile) formData.append("aqi_file", aqiFile);
+
+        // Update UI
+        setAnalysisStatus("running");
+        document.getElementById("run-analysis").disabled = true;
+        document.getElementById("run-analysis").textContent =
+          "Running Analysis...";
+        analysisRunning = true;
+
+        // Clear previous results
+        anomaliesData = [];
+        predictionsData = [];
+        updateDashboard();
+
+        try {
+          const response = await fetch("/api/run_analysis", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            console.log("Analysis started:", result);
+
+            // Start polling for completion
+            startResultsPolling();
+          } else {
+            const errorText = await response.text();
+            throw new Error(`Server error: ${response.status} - ${errorText}`);
+          }
+        } catch (error) {
+          console.error("Error starting analysis:", error);
+          alert("Failed to start analysis: " + error.message);
+          resetAnalysisUI();
+        }
+      }
+
+      // Poll for results until analysis is complete
+      function startResultsPolling() {
+        if (statusCheckInterval) {
+          clearInterval(statusCheckInterval);
+        }
+
+        let attempts = 0;
+        const maxAttempts = 60; // 60 * 2 seconds = 2 minute timeout
+
+        console.log("Starting results polling...");
+
+        statusCheckInterval = setInterval(async () => {
+          attempts++;
+          console.log(`Polling attempt ${attempts}/${maxAttempts}`);
+
+          try {
+            const response = await fetch("/api/get_results");
+            if (response.ok) {
+              const results = await response.json();
+
+              // Check if we have any results (analysis complete)
+              if (
+                (results.anomalies && results.anomalies.length > 0) ||
+                (results.predictions && results.predictions.length > 0) ||
+                results.summary
+              ) {
+                console.log("Analysis complete! Results:", results);
+                clearInterval(statusCheckInterval);
+
+                // Update data
+                anomaliesData = results.anomalies || [];
+                predictionsData = results.predictions || [];
+
+                // Update UI
+                updateDashboard(results.summary);
+                resetAnalysisUI();
+
+                alert("Analysis completed successfully! Results loaded.");
+                return;
+              } else {
+                console.log("No results yet, continuing to poll...");
+              }
+            }
+
+            // Timeout after max attempts
+            if (attempts >= maxAttempts) {
+              console.log("Polling timeout reached");
+              clearInterval(statusCheckInterval);
+              resetAnalysisUI();
+              alert(
+                "Analysis timed out. Please check the server console for any errors."
+              );
+            }
+          } catch (error) {
+            console.error("Error polling for results:", error);
+
+            if (attempts >= maxAttempts) {
+              clearInterval(statusCheckInterval);
+              resetAnalysisUI();
+              alert(
+                "Error checking analysis status. Please check the server console."
+              );
+            }
+          }
+        }, 2000); // Check every 2 seconds
+      }
+
+      // Reset UI after analysis
+      function resetAnalysisUI() {
+        setAnalysisStatus("ready");
+        document.getElementById("run-analysis").disabled = false;
+        document.getElementById("run-analysis").textContent = "Run Analysis";
+        analysisRunning = false;
+      }
+
+      // Set analysis status indicator
+      function setAnalysisStatus(status) {
+        const indicator = document.querySelector(
+          "#analysis-status .status-indicator"
+        );
+        const text = document.querySelector("#analysis-status span:last-child");
+
+        indicator.className = "status-indicator";
+
+        switch (status) {
+          case "running":
+            indicator.classList.add("status-running");
+            text.textContent = "Analysis Running...";
+            break;
+          case "ready":
+            indicator.classList.add("status-ready");
+            text.textContent = "Ready";
+            break;
+          case "error":
+            indicator.classList.add("status-error");
+            text.textContent = "Error";
+            break;
+        }
+      }
+
+      // Load results from server
+      async function loadResults() {
+        try {
+          console.log("Loading results from server...");
+          const response = await fetch("/api/get_results");
+          if (response.ok) {
+            const results = await response.json();
+            console.log("Results loaded:", results);
+
+            anomaliesData = results.anomalies || [];
+            predictionsData = results.predictions || [];
+
+            updateDashboard(results.summary);
+          } else {
+            console.log("No analysis results available yet");
+            // Show demo data or empty state
+            updateDashboard();
+          }
+        } catch (error) {
+          console.error("Error loading results:", error);
+          updateDashboard();
+        }
+      }
+
+      // Update the entire dashboard
+      function updateDashboard(summary = {}) {
+        console.log("Updating dashboard with:", {
+          anomalies: anomaliesData.length,
+          predictions: predictionsData.length,
+          summary: summary,
+        });
+
+        updateOverview(summary);
+        updateTimeSeriesChart();
+        updateAnomaliesList();
+        updatePredictionsList();
+      }
+
+      // Update overview statistics
+      function updateOverview(summary) {
+        const totalAnomalies = anomaliesData.length;
+        const flaggedPredictions = predictionsData.filter(
+          (p) =>
+            p.flag_upcoming_anomaly === "True" ||
+            p.flag_upcoming_anomaly === true
+        ).length;
+
+        document.getElementById("total-anomalies").textContent = totalAnomalies;
+        document.getElementById("total-predictions").textContent =
+          flaggedPredictions;
+
+        console.log(
+          `Overview: ${totalAnomalies} anomalies, ${flaggedPredictions} predictions`
+        );
+
+        // Find most affected signal
+        const signalCounts = {};
+        anomaliesData.forEach((anomaly) => {
+          const signal = anomaly.signal || anomaly.signals;
+          if (signal) {
+            // Handle comma-separated signals
+            const signals =
+              typeof signal === "string" ? signal.split(",") : [signal];
+            signals.forEach((s) => {
+              const cleanSignal = s.trim();
+              signalCounts[cleanSignal] = (signalCounts[cleanSignal] || 0) + 1;
+            });
+          }
+        });
+
+        let topSignal = "-";
+        let maxCount = 0;
+        for (const [signal, count] of Object.entries(signalCounts)) {
+          if (count > maxCount) {
+            maxCount = count;
+            topSignal = signal;
+          }
+        }
+        document.getElementById("top-signal").textContent = topSignal;
+
+        // Time range from summary or calculate from data
+        if (summary && summary.time_range) {
+          document.getElementById("time-range").textContent =
+            summary.time_range;
+        } else if (anomaliesData.length > 0) {
+          try {
+            const timestamps = anomaliesData
+              .map((a) => new Date(a.timestamp || a.event_time))
+              .filter((ts) => !isNaN(ts.getTime()));
+
+            if (timestamps.length > 0) {
+              const minTime = new Date(Math.min(...timestamps));
+              const maxTime = new Date(Math.max(...timestamps));
+              document.getElementById(
+                "time-range"
+              ).textContent = `${minTime.toLocaleDateString()} - ${maxTime.toLocaleDateString()}`;
+            } else {
+              document.getElementById("time-range").textContent =
+                "No valid timestamps";
+            }
+          } catch (e) {
+            document.getElementById("time-range").textContent =
+              "Error parsing dates";
+          }
+        } else {
+          document.getElementById("time-range").textContent = "No data";
+        }
+      }
+
+      // Update the time series chart
+      function updateTimeSeriesChart() {
+        const chartContainer = document.getElementById("timeseries-chart");
+
+        if (anomaliesData.length === 0) {
+          chartContainer.innerHTML =
+            '<div style="display: flex; justify-content: center; align-items: center; height: 100%; color: #7f8c8d;">Run analysis to see time series data</div>';
+          return;
+        }
+
+        // Create sample time series data based on anomalies
+        // In a real implementation, you would load actual time series data
+        const hours = 24 * 7; // One week
+        const now = new Date();
+        const timestamps = [];
+        const values = [];
+        const anomalyTimestamps = [];
+        const anomalyValues = [];
+
+        // Generate sample data
+        for (let i = 0; i < hours; i++) {
+          const timestamp = new Date(now);
+          timestamp.setHours(timestamp.getHours() - (hours - i));
+          timestamps.push(timestamp);
+
+          const hour = timestamp.getHours();
+          let baseValue = 50;
+
+          if (
+            currentSignal === "PM2.5" ||
+            currentSignal === "PM10" ||
+            currentSignal === "AQI"
+          ) {
+            baseValue =
+              40 +
+              20 * ((hour >= 7 && hour <= 10) || (hour >= 18 && hour <= 21));
+            baseValue += Math.random() * 10;
+          } else if (currentSignal === "traffic_count") {
+            baseValue =
+              200 +
+              400 * ((hour >= 8 && hour <= 9) || (hour >= 18 && hour <= 19));
+            baseValue += Math.random() * 50;
+          } else if (currentSignal === "SOUND") {
+            baseValue = 50 + 20 * (hour >= 7 && hour <= 22);
+            baseValue += Math.random() * 5;
+          } else {
+            baseValue = 30 + Math.random() * 40;
+          }
+
+          values.push(Math.max(0, baseValue));
+        }
+
+        // Mark actual anomalies from the data
+        anomaliesData.forEach((anomaly) => {
+          const signal = anomaly.signal || anomaly.signals;
+          if (signal && signal.includes(currentSignal)) {
+            try {
+              const anomalyTime = new Date(
+                anomaly.timestamp || anomaly.event_time
+              );
+              if (!isNaN(anomalyTime.getTime())) {
+                anomalyTimestamps.push(anomalyTime);
+                const anomalyValue =
+                  anomaly.value ||
+                  anomaly.max_value ||
+                  values[Math.floor(Math.random() * values.length)] * 1.5;
+                anomalyValues.push(anomalyValue);
+              }
+            } catch (e) {
+              console.log("Error processing anomaly timestamp:", e);
+            }
+          }
+        });
+
+        const trace1 = {
+          x: timestamps,
+          y: values,
+          type: "scatter",
+          mode: "lines",
+          name: currentSignal,
+          line: { color: "#3498db", width: 2 },
+        };
+
+        const traces = [trace1];
+
+        if (anomalyTimestamps.length > 0) {
+          const trace2 = {
+            x: anomalyTimestamps,
+            y: anomalyValues,
+            type: "scatter",
+            mode: "markers",
+            name: "Anomalies",
+            marker: {
+              color: "#e74c3c",
+              size: 10,
+              symbol: "circle-open",
+              line: { width: 2 },
+            },
+          };
+          traces.push(trace2);
+        }
+
+        const layout = {
+          title: `${currentSignal} Time Series with Anomalies`,
+          xaxis: { title: "Time" },
+          yaxis: { title: currentSignal },
+          hovermode: "closest",
+          showlegend: true,
+          legend: { orientation: "h", y: -0.2 },
+        };
+
+        Plotly.newPlot("timeseries-chart", traces, layout, {
+          responsive: true,
+        });
+      }
+
+      // Update the anomalies list
+      function updateAnomaliesList() {
+        const container = document.getElementById("anomaly-list");
+
+        if (anomaliesData.length === 0) {
+          container.innerHTML =
+            '<div style="text-align: center; color: #7f8c8d; padding: 20px;">No anomalies detected</div>';
+          return;
+        }
+
+        const displayAnomalies = anomaliesData.slice(0, 10);
+        container.innerHTML = "";
+
+        displayAnomalies.forEach((anomaly) => {
+          const signal = anomaly.signal || anomaly.signals || "Unknown";
+          const value = anomaly.value || anomaly.max_value || "N/A";
+          const zScore = anomaly.z_score || anomaly.max_z || "N/A";
+          const jump = anomaly.jump || anomaly.max_rel_change || "N/A";
+          const timestamp =
+            anomaly.timestamp || anomaly.event_time || "Unknown time";
+
+          let timestampDisplay;
+          try {
+            timestampDisplay = new Date(timestamp).toLocaleString();
+          } catch (e) {
+            timestampDisplay = "Invalid date";
+          }
+
+          const anomalyEl = document.createElement("div");
+          anomalyEl.className = "anomaly-item";
+          anomalyEl.innerHTML = `
+                <div class="anomaly-time">${timestampDisplay}</div>
+                <div class="anomaly-signal">${signal}</div>
+                <div class="anomaly-value">Value: ${Number(value).toFixed(
+                  2
+                )} | Z-score: ${Number(zScore).toFixed(2)} | Jump: ${Number(
+            jump
+          ).toFixed(2)}</div>
+            `;
+          container.appendChild(anomalyEl);
+        });
+
+        // Show count
+        if (anomaliesData.length > 10) {
+          const moreText = document.createElement("div");
+          moreText.style.textAlign = "center";
+          moreText.style.padding = "10px";
+          moreText.style.color = "#7f8c8d";
+          moreText.textContent = `... and ${
+            anomaliesData.length - 10
+          } more anomalies`;
+          container.appendChild(moreText);
+        }
+      }
+
+      // Update the predictions list
+      function updatePredictionsList() {
+        const container = document.getElementById("prediction-list");
+        const alertContainer = document.getElementById("alert-container");
+        container.innerHTML = "";
+        alertContainer.innerHTML = "";
+
+        const flaggedPredictions = predictionsData.filter(
+          (p) =>
+            p.flag_upcoming_anomaly === "True" ||
+            p.flag_upcoming_anomaly === true
+        );
+
+        console.log(
+          `Filtered predictions: ${flaggedPredictions.length} flagged out of ${predictionsData.length} total`
+        );
+
+        // Show alert for flagged predictions in the next 12 hours
+        const upcomingAlerts = flaggedPredictions.filter((p) => {
+          const hours = parseInt(p.horizon_hours);
+          return !isNaN(hours) && hours <= 12;
+        });
+
+        if (upcomingAlerts.length > 0) {
+          const alertBanner = document.createElement("div");
+          alertBanner.className = "alert-banner";
+          alertBanner.innerHTML = `
+                <div class="alert-icon">⚠️</div>
+                <div class="alert-content">
+                    <h3>Anomaly Alert</h3>
+                    <p>${upcomingAlerts.length} potential anomalies predicted in the next 12 hours</p>
+                </div>
+            `;
+          alertContainer.appendChild(alertBanner);
+        }
+
+        if (flaggedPredictions.length === 0) {
+          if (predictionsData.length === 0) {
+            container.innerHTML =
+              '<div style="text-align: center; color: #7f8c8d; padding: 20px;">No predictions available. Run analysis with prediction enabled.</div>';
+          } else {
+            container.innerHTML =
+              '<div style="text-align: center; color: #7f8c8d; padding: 20px;">No upcoming anomaly predictions flagged.</div>';
+          }
+          return;
+        }
+
+        const displayPredictions = flaggedPredictions.slice(0, 10);
+
+        displayPredictions.forEach((prediction) => {
+          const signal = prediction.signal || "Unknown";
+          const hours = prediction.horizon_hours || "N/A";
+          const forecastTime = prediction.forecast_time || "Unknown time";
+          const forecastValue = prediction.forecast_value || "N/A";
+          const zScore = prediction.z_score || "N/A";
+          const relJump = prediction.rel_jump || "N/A";
+
+          let timeDisplay;
+          try {
+            timeDisplay = new Date(forecastTime).toLocaleString();
+          } catch (e) {
+            timeDisplay = "Invalid date";
+          }
+
+          const predictionEl = document.createElement("div");
+          predictionEl.className = "prediction-item";
+          predictionEl.innerHTML = `
+                <div class="prediction-time">${timeDisplay} (in ${hours} hours)</div>
+                <div class="prediction-signal">${signal}</div>
+                <div class="prediction-value">Forecast: ${Number(
+                  forecastValue
+                ).toFixed(2)} | Z-score: ${Number(zScore).toFixed(
+            2
+          )} | Jump: ${Number(relJump).toFixed(2)}</div>
+            `;
+          container.appendChild(predictionEl);
+        });
+
+        // Show count
+        if (flaggedPredictions.length > 10) {
+          const moreText = document.createElement("div");
+          moreText.style.textAlign = "center";
+          moreText.style.padding = "10px";
+          moreText.style.color = "#7f8c8d";
+          moreText.textContent = `... and ${
+            flaggedPredictions.length - 10
+          } more predictions`;
+          container.appendChild(moreText);
+        }
+      }
+
+      // Refresh data
+      function refreshData() {
+        loadResults();
+        alert("Data refreshed!");
+      }
+
+      // Export PDF report
+      function exportPDF() {
+        alert(
+          "PDF export would be implemented here. This would generate a comprehensive report."
+        );
+      }
+
+      // View all anomalies
+      function viewAllAnomalies() {
+        if (anomaliesData.length === 0) {
+          alert("No anomalies to display.");
+          return;
+        }
+        alert(
+          `Showing all ${anomaliesData.length} anomalies. In a full implementation, this would open a detailed view or modal.`
+        );
+
+        // For now, just log to console
+        console.log("All anomalies:", anomaliesData);
+      }
+
+      // View all predictions
+      function viewAllPredictions() {
+        const flagged = predictionsData.filter(
+          (p) =>
+            p.flag_upcoming_anomaly === "True" ||
+            p.flag_upcoming_anomaly === true
+        );
+
+        if (flagged.length === 0) {
+          alert("No flagged predictions to display.");
+          return;
+        }
+        alert(
+          `Showing all ${flagged.length} flagged predictions. In a full implementation, this would open a detailed view or modal.`
+        );
+
+        // For now, just log to console
+        console.log("All flagged predictions:", flagged);
+      }
+    </script>
+  </body>
+</html>
