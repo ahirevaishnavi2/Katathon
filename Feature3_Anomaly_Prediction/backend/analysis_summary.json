@@ -1,0 +1,42 @@
+{
+  "total_anomalies": 50,
+  "total_predictions": 36,
+  "parameters_used": {
+    "z_threshold": 4.0,
+    "rel_threshold": 0.8,
+    "run_prediction": true,
+    "horizon": 6,
+    "window_start": 7,
+    "window_end": 12,
+    "pune_path": "uploaded_pune.csv",
+    "aqi_path": "uploaded_aqi.csv"
+  },
+  "signals_monitored": [
+    "PM2_MAX",
+    "PM2_MIN",
+    "PM10_MAX",
+    "PM10_MIN",
+    "NO_MAX",
+    "NO_MIN",
+    "NO2_MAX",
+    "NO2_MIN",
+    "OZONE_MAX",
+    "OZONE_MIN",
+    "SO2_MAX",
+    "SO2_MIN",
+    "CO_MAX",
+    "CO_MIN",
+    "AQI",
+    "PM2.5",
+    "PM10",
+    "NO2",
+    "CO",
+    "SO2",
+    "O3",
+    "Vehicle Count",
+    "Industrial Activity Index",
+    "SOUND"
+  ],
+  "time_range": "2019-01-05 00:00:00 to 2025-02-20 15:00:00",
+  "analysis_time": "2025-11-22T13:07:55.876562"
+}
