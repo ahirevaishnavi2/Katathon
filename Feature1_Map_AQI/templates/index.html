@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gyatah | Where Motion is Intelligent</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps.css"
+    />
+    <style>
+      :root {
+        --primary: #2e7d32;
+        --primary-light: #4caf50;
+        --primary-dark: #1b5e20;
+        --secondary: #1976d2;
+        --secondary-light: #42a5f5;
+        --secondary-dark: #0d47a1;
+        --accent: #ff9800;
+        --accent-light: #ffb74d;
+        --accent-dark: #f57c00;
+        --light-bg: #f5f7fa;
+        --light-card: #ffffff;
+        --light-text: #333333;
+        --light-border: #e0e0e0;
+        --dark-bg: #121212;
+        --dark-card: #1e1e1e;
+        --dark-text: #e0e0e0;
+        --dark-border: #333333;
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        --shadow-dark: 0 4px 12px rgba(0, 0, 0, 0.3);
+        --radius: 12px;
+        --transition: all 0.3s ease;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: var(--light-bg);
+        color: var(--light-text);
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      header {
+        background: var(--light-card);
+        box-shadow: var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo i {
+        font-size: 28px;
+        color: var(--primary);
+      }
+
+      .logo h1 {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--primary);
+      }
+
+      .tagline {
+        font-size: 14px;
+        color: var(--primary-light);
+        margin-top: -5px;
+      }
+
+      nav {
+        display: flex;
+        gap: 10px;
+      }
+
+      .nav-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        background: transparent;
+        color: var(--light-text);
+        cursor: pointer;
+        font-weight: 600;
+        transition: var(--transition);
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .nav-btn:hover,
+      .nav-btn.active {
+        background: var(--primary);
+        color: white;
+      }
+
+      main {
+        padding: 30px 0;
+      }
+
+      .section {
+        display: none;
+      }
+
+      .section.active {
+        display: block;
+      }
+
+      .hero {
+        text-align: center;
+        padding: 40px 0;
+        background: linear-gradient(
+          135deg,
+          var(--primary-light),
+          var(--primary)
+        );
+        color: white;
+        border-radius: var(--radius);
+        margin-bottom: 30px;
+      }
+
+      .hero h2 {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+      }
+
+      .ai-insight {
+        font-size: 1.2rem;
+        max-width: 800px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 15px;
+        border-radius: var(--radius);
+      }
+
+      .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+      }
+
+      .action-card {
+        background: var(--light-card);
+        border-radius: var(--radius);
+        padding: 25px;
+        text-align: center;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        text-decoration: none;
+        color: inherit;
+        border-top: 4px solid var(--primary);
+      }
+
+      .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .card-icon {
+        font-size: 40px;
+        margin-bottom: 15px;
+      }
+
+      .action-card h3 {
+        margin-bottom: 10px;
+        color: var(--primary);
+      }
+
+      .location-input-section {
+        background: var(--light-card);
+        border-radius: var(--radius);
+        padding: 25px;
+        box-shadow: var(--shadow);
+        margin-bottom: 30px;
+      }
+
+      .location-input-section h3 {
+        margin-bottom: 20px;
+        color: var(--primary);
+      }
+
+      .input-group {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .input-group input {
+        flex: 1;
+        min-width: 200px;
+        padding: 12px 15px;
+        border: 1px solid var(--light-border);
+        border-radius: 8px;
+        font-size: 16px;
+      }
+
+      .input-group button {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: var(--transition);
+      }
+
+      .primary-btn {
+        background: var(--primary);
+        color: white;
+      }
+
+      .primary-btn:hover {
+        background: var(--primary-dark);
+      }
+
+      .analysis-results {
+        background: var(--light-card);
+        border-radius: var(--radius);
+        padding: 25px;
+        box-shadow: var(--shadow);
+        margin-top: 30px;
+      }
+
+      .user-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: var(--light-card);
+        border-radius: var(--radius);
+        padding: 20px;
+        text-align: center;
+        box-shadow: var(--shadow);
+        border-top: 4px solid var(--primary);
+      }
+
+      .stat-card h4 {
+        margin-bottom: 15px;
+        color: var(--primary);
+      }
+
+      .circular-gauge {
+        width: 150px;
+        height: 150px;
+        margin: 0 auto;
+      }
+
+      .circular-gauge svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .gauge-bg {
+        fill: none;
+        stroke: #e0e0e0;
+        stroke-width: 10;
+      }
+
+      .gauge-fill {
+        fill: none;
+        stroke: var(--primary);
+        stroke-width: 10;
+        stroke-linecap: round;
+        transform: rotate(-90deg);
+        transform-origin: 50% 50%;
+        stroke-dasharray: 283;
+        stroke-dashoffset: 283;
+        transition: stroke-dashoffset 1s ease;
+      }
+
+      .aqi-gauge {
+        stroke: var(--accent);
+      }
+
+      .noise-gauge {
+        stroke: var(--secondary);
+      }
+
+      .traffic-gauge {
+        stroke: var(--primary-dark);
+      }
+
+      .gauge-text {
+        font-size: 24px;
+        font-weight: bold;
+        fill: var(--light-text);
+        text-anchor: middle;
+        dominant-baseline: middle;
+      }
+
+      .impact-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .impact-card {
+        background: var(--light-card);
+        border-radius: var(--radius);
+        padding: 25px;
+        text-align: center;
+        box-shadow: var(--shadow);
+        border-left: 4px solid var(--primary);
+      }
+
+      .impact-card h4 {
+        margin-bottom: 10px;
+        color: var(--primary);
+      }
+
+      .impact-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--primary);
+      }
+
+      .badges-section {
+        background: var(--light-card);
+        border-radius: var(--radius);
+        padding: 25px;
+        box-shadow: var(--shadow);
+      }
+
+      .badges-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .badge-item {
+        text-align: center;
+        padding: 15px 10px;
+        background: var(--light-bg);
+        border-radius: var(--radius);
+      }
+
+      .badge-icon {
+        font-size: 30px;
+        margin-bottom: 8px;
+      }
+
+      .map-container {
+        height: 500px;
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        margin-bottom: 20px;
+      }
+
+      .map-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .mode-toggle {
+        display: flex;
+        background: var(--light-card);
+        padding: 5px;
+        border-radius: 30px;
+        box-shadow: var(--shadow);
+      }
+
+      .mode-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        background: transparent;
+        cursor: pointer;
+        font-weight: 600;
+        transition: var(--transition);
+      }
+
+      .mode-btn.active {
+        background: var(--primary);
+        color: white;
+      }
+
+      .map-legend {
+        background: var(--light-card);
+        border-radius: var(--radius);
+        padding: 20px;
+        box-shadow: var(--shadow);
+      }
+
+      .map-legend h4 {
+        margin-bottom: 15px;
+        color: var(--primary);
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .legend-color {
+        margin-right: 10px;
+        font-size: 20px;
+      }
+
+      .community-header {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+      }
+
+      .community-feed {
+        display: grid;
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .post-item {
+        background: var(--light-card);
+        border-radius: var(--radius);
+        padding: 20px;
+        box-shadow: var(--shadow);
+        border-left: 4px solid var(--primary);
+      }
+
+      .post-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .post-title {
+        font-weight: bold;
+        color: var(--primary);
+      }
+
+      .post-type-badge {
+        background: var(--primary-light);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+      }
+
+      .post-meta {
+        font-size: 14px;
+        color: #666;
+        margin: 10px 0;
+      }
+
+      .upvote-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: var(--transition);
+      }
+
+      .upvote-btn:hover {
+        background: var(--primary-dark);
+      }
+
+      .leaderboard {
+        background: var(--light-card);
+        border-radius: var(--radius);
+        padding: 25px;
+        box-shadow: var(--shadow);
+      }
+
+      .leaderboard-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid var(--light-border);
+      }
+
+      .leaderboard-item:last-child {
+        border-bottom: none;
+      }
+
+      .rank {
+        font-size: 20px;
+        margin-right: 15px;
+        width: 30px;
+      }
+
+      .chatbot-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+      }
+
+      .chatbot-toggle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: white;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+      }
+
+      .chatbot-toggle:hover {
+        background: var(--primary-dark);
+        transform: scale(1.1);
+      }
+
+      .chatbot-window {
+        position: absolute;
+        bottom: 70px;
+        right: 0;
+        width: 350px;
+        height: 500px;
+        background: var(--light-card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .chatbot-header {
+        background: var(--primary);
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .chatbot-header button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .chatbot-messages {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .bot-message,
+      .user-message {
+        padding: 10px 15px;
+        border-radius: 18px;
+        max-width: 80%;
+      }
+
+      .bot-message {
+        background: var(--light-bg);
+        align-self: flex-start;
+      }
+
+      .user-message {
+        background: var(--primary);
+        color: white;
+        align-self: flex-end;
+      }
+
+      .chatbot-input {
+        display: flex;
+        padding: 15px;
+        border-top: 1px solid var(--light-border);
+      }
+
+      .chatbot-input input {
+        flex: 1;
+        padding: 10px 15px;
+        border: 1px solid var(--light-border);
+        border-radius: 20px;
+        margin-right: 10px;
+      }
+
+      .chatbot-input button {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1001;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background: var(--light-card);
+        border-radius: var(--radius);
+        padding: 30px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: var(--shadow);
+        position: relative;
+      }
+
+      .close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 24px;
+        cursor: pointer;
+        color: #666;
+      }
+
+      .route-form,
+      .post-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .route-form input,
+      .post-form input,
+      .post-form textarea,
+      .post-form select {
+        padding: 12px 15px;
+        border: 1px solid var(--light-border);
+        border-radius: 8px;
+        font-size: 16px;
+      }
+
+      .post-form textarea {
+        min-height: 100px;
+        resize: vertical;
+      }
+
+      .route-options {
+        display: flex;
+        gap: 15px;
+      }
+
+      .route-options label {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      @media (max-width: 768px) {
+        .header-container {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        nav {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .input-group {
+          flex-direction: column;
+        }
+
+        .input-group input,
+        .input-group button {
+          width: 100%;
+        }
+
+        .chatbot-window {
+          width: calc(100vw - 40px);
+          right: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-container container">
+        <div class="logo">
+          <i class="fas fa-leaf"></i>
+          <div>
+            <h1>Gyatah</h1>
+            <p class="tagline">Where Motion is Intelligent</p>
+          </div>
+        </div>
+        <nav>
+          <button class="nav-btn active" data-section="home">Home</button>
+          <a href="http://localhost:8080/dashboard" class="nav-btn"
+            >Dashboard</a
+          >
+          <a href="http://localhost:8080/map" class="nav-btn">Live Map</a>
+          <button class="nav-btn" data-section="community">Community</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section id="home-section" class="section active">
+        <div class="hero">
+          <h2>Discover Smarter, Greener Cities</h2>
+          <p class="ai-insight" id="main-insight">Loading AI insights...</p>
+        </div>
+
+        <div class="quick-actions">
+          <a href="http://localhost:8080/dashboard" class="action-card">
+            <div class="card-icon"><i class="fas fa-wind"></i></div>
+            <h3>Check Air Quality</h3>
+            <p>Real-time AQI, noise & traffic</p>
+          </a>
+          <div class="action-card" onclick="showRouteModal()">
+            <div class="card-icon"><i class="fas fa-route"></i></div>
+            <h3>Find Low-Traffic Routes</h3>
+            <p>AI-powered eco-friendly paths</p>
+          </div>
+          <a href="http://localhost:8080/dashboard" class="action-card">
+            <div class="card-icon"><i class="fas fa-medal"></i></div>
+            <h3>Carbon Credit Score</h3>
+            <p>Track your green impact</p>
+          </a>
+        </div>
+
+        <div class="location-input-section">
+          <h3><i class="fas fa-map-marker-alt"></i> Analyze Your Location</h3>
+          <div class="input-group">
+            <input
+              type="text"
+              id="location-input"
+              placeholder="Enter location or use GPS"
+            />
+            <button onclick="getCurrentLocation()">
+              <i class="fas fa-location-crosshairs"></i> Use GPS
+            </button>
+            <button onclick="analyzeLocation()" class="primary-btn">
+              <i class="fas fa-chart-bar"></i> Analyze
+            </button>
+          </div>
+        </div>
+
+        <div
+          id="analysis-results"
+          class="analysis-results"
+          style="display: none"
+        >
+          <h3><i class="fas fa-chart-pie"></i> Location Analysis Results</h3>
+          <div id="analysis-content"></div>
+        </div>
+      </section>
+
+      <section id="dashboard-section" class="section">
+        <h2><i class="fas fa-leaf"></i> Your Eco-Dashboard</h2>
+
+        <div class="user-stats">
+          <div class="stat-card">
+            <h4>Green Score</h4>
+            <div class="circular-gauge">
+              <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" class="gauge-bg"></circle>
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  class="gauge-fill"
+                  id="green-score-gauge"
+                ></circle>
+                <text x="50" y="55" class="gauge-text" id="green-score-text">
+                  0
+                </text>
+              </svg>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <h4>Air Quality Index</h4>
+            <div class="circular-gauge">
+              <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" class="gauge-bg"></circle>
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  class="gauge-fill aqi-gauge"
+                  id="aqi-gauge"
+                ></circle>
+                <text x="50" y="55" class="gauge-text" id="aqi-text">0</text>
+              </svg>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <h4>Noise Level</h4>
+            <div class="circular-gauge">
+              <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" class="gauge-bg"></circle>
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  class="gauge-fill noise-gauge"
+                  id="noise-gauge"
+                ></circle>
+                <text x="50" y="55" class="gauge-text" id="noise-text">0</text>
+              </svg>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <h4>Traffic Level</h4>
+            <div class="circular-gauge">
+              <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" class="gauge-bg"></circle>
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  class="gauge-fill traffic-gauge"
+                  id="traffic-gauge"
+                ></circle>
+                <text x="50" y="55" class="gauge-text" id="traffic-text">
+                  0
+                </text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="impact-stats">
+          <div class="impact-card">
+            <h4><i class="fas fa-cloud"></i> CO₂ Saved</h4>
+            <p class="impact-value" id="co2-saved">0 kg</p>
+          </div>
+          <div class="impact-card">
+            <h4><i class="fas fa-walking"></i> Clean Trips</h4>
+            <p class="impact-value" id="clean-trips">0</p>
+          </div>
+          <div class="impact-card">
+            <h4><i class="fas fa-fire"></i> Eco Streak</h4>
+            <p class="impact-value" id="eco-streak">0 days</p>
+          </div>
+          <div class="impact-card">
+            <h4><i class="fas fa-star"></i> Eco Points</h4>
+            <p class="impact-value" id="eco-points">0</p>
+          </div>
+        </div>
+
+        <div class="badges-section">
+          <h3><i class="fas fa-trophy"></i> Your Badges</h3>
+          <div id="badges-container" class="badges-grid"></div>
+        </div>
+      </section>
+
+      <section id="map-section" class="section">
+        <div class="map-controls">
+          <h2><i class="fas fa-map-marked-alt"></i> Live Urban Map</h2>
+          <div class="mode-toggle">
+            <button class="mode-btn active" data-mode="citizen">
+              <i class="fas fa-users"></i> Citizen Mode
+            </button>
+            <button class="mode-btn" data-mode="expert">
+              <i class="fas fa-microscope"></i> Expert Mode
+            </button>
+          </div>
+        </div>
+
+        <div id="map" class="map-container"></div>
+
+        <div class="map-legend" id="citizen-legend">
+          <h4>Map Legend</h4>
+          <div class="legend-item">
+            <span class="legend-color"
+              ><i class="fas fa-car" style="color: #ef4444"></i
+            ></span>
+            Busy Areas
+          </div>
+          <div class="legend-item">
+            <span class="legend-color"
+              ><i class="fas fa-leaf" style="color: #10b981"></i
+            ></span>
+            Calm Zones
+          </div>
+          <div class="legend-item">
+            <span class="legend-color"
+              ><i class="fas fa-lungs" style="color: #f59e0b"></i
+            ></span>
+            High Pollution
+          </div>
+        </div>
+
+        <div
+          class="map-legend expert-legend"
+          id="expert-legend"
+          style="display: none"
+        >
+          <h4>Expert Controls</h4>
+          <label
+            ><input type="checkbox" checked data-layer="traffic-flow" /> Traffic
+            Flow</label
+          >
+          <label
+            ><input type="checkbox" checked data-layer="traffic-incidents" />
+            Traffic Incidents</label
+          >
+          <label
+            ><input type="checkbox" data-layer="poi-clusters" /> POI
+            Clusters</label
+          >
+        </div>
+      </section>
+
+      <section id="community-section" class="section">
+        <h2><i class="fas fa-comments"></i> Community Space</h2>
+
+        <div class="community-header">
+          <button onclick="showPostModal()" class="primary-btn">
+            <i class="fas fa-plus"></i> Share Your Insight
+          </button>
+        </div>
+
+        <div class="community-feed" id="community-feed">
+          <p>Loading community posts...</p>
+        </div>
+
+        <div class="leaderboard">
+          <h3><i class="fas fa-trophy"></i> Top Eco-Commuters</h3>
+          <div id="leaderboard-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <div class="chatbot-container">
+      <button class="chatbot-toggle" onclick="toggleChatbot()">
+        <i class="fas fa-robot"></i>
+      </button>
+      <div class="chatbot-window" id="chatbot-window" style="display: none">
+        <div class="chatbot-header">
+          <h3><i class="fas fa-robot"></i> GeoSense+ Assistant</h3>
+          <button onclick="toggleChatbot()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="chatbot-messages" id="chatbot-messages">
+          <div class="bot-message">
+            Hi! I'm your eco-assistant. Ask me about clean routes, air quality,
+            or eco-points! 🌿
+          </div>
+        </div>
+        <div class="chatbot-input">
+          <input
+            type="text"
+            id="chatbot-input"
+            placeholder="Ask me anything..."
+            onkeypress="if(event.key==='Enter') sendChatMessage()"
+          />
+          <button onclick="sendChatMessage()">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="route-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeRouteModal()">&times;</span>
+        <h2><i class="fas fa-route"></i> Plan Eco-Friendly Route</h2>
+        <div class="route-form">
+          <input
+            type="text"
+            id="start-location"
+            placeholder="Start location (or use GPS)"
+          />
+          <input type="text" id="end-location" placeholder="Destination" />
+          <div class="route-options">
+            <label
+              ><input type="radio" name="route-type" value="eco" checked />
+              Eco-Friendly</label
+            >
+            <label
+              ><input type="radio" name="route-type" value="fastest" />
+              Fastest</label
+            >
+          </div>
+          <button onclick="planRoute()" class="primary-btn">Find Route</button>
+        </div>
+        <div id="route-results"></div>
+      </div>
+    </div>
+
+    <div id="post-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closePostModal()">&times;</span>
+        <h2>Share Your Insight</h2>
+        <div class="post-form">
+          <input type="text" id="post-title" placeholder="Title" />
+          <textarea
+            id="post-content"
+            placeholder="Share your eco-discovery..."
+          ></textarea>
+          <input type="text" id="post-location" placeholder="Location" />
+          <select id="post-type">
+            <option value="eco_route">Eco Route</option>
+            <option value="eco_zone">Eco Zone</option>
+            <option value="alert">Traffic Alert</option>
+            <option value="general">General</option>
+          </select>
+          <button onclick="submitPost()" class="primary-btn">Post</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps-web.min.js"></script>
+    <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/services/services-web.min.js"></script>
+    <script>
+      // Your JavaScript code remains exactly the same
+      // Only the styling has been updated
+      const TOMTOM_API_KEY = "{{ tomtom_key }}";
+
+      let map;
+      let trafficMap;
+      let currentLat = 18.5204;
+      let currentLon = 73.8567;
+      let currentMode = "citizen";
+      let markers = [];
+      let trafficMapMarkers = [];
+      let trafficLayer;
+      let trafficIncidentsLayer;
+      let currentFilterType = "all";
+
+      function showSection(sectionName) {
+        document
+          .querySelectorAll(".section")
+          .forEach((s) => s.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-btn")
+          .forEach((b) => b.classList.remove("active"));
+
+        document
+          .getElementById(`${sectionName}-section`)
+          .classList.add("active");
+        document
+          .querySelector(`[data-section="${sectionName}"]`)
+          .classList.add("active");
+
+        if (sectionName === "map") {
+          // Wait for section to be visible before initializing map
+          setTimeout(() => {
+            if (!map) {
+              initMap();
+            }
+          }, 200);
+        } else if (sectionName === "dashboard") {
+          loadDashboard();
+        } else if (sectionName === "community") {
+          loadCommunityPosts();
+          loadLeaderboard();
+        }
+      }
+
+      function initMap() {
+        console.log(
+          "initMap called, map exists:",
+          !!map,
+          "tt defined:",
+          typeof tt !== "undefined"
+        );
+
+        if (!map && typeof tt !== "undefined") {
+          const mapContainer = document.getElementById("map");
+          if (!mapContainer) {
+            console.error("Map container not found");
+            return;
+          }
+
+          // Check if container is visible
+          const containerStyle = window.getComputedStyle(mapContainer);
+          console.log("Container style:", {
+            display: containerStyle.display,
+            visibility: containerStyle.visibility,
+            width: containerStyle.width,
+            height: containerStyle.height,
+          });
+
+          if (
+            containerStyle.display === "none" ||
+            containerStyle.visibility === "hidden"
+          ) {
+            console.log("Map container not visible yet, will retry...");
+            setTimeout(initMap, 200);
+            return;
+          }
+
+          try {
+            console.log(
+              "Initializing TomTom map with key:",
+              TOMTOM_API_KEY ? "SET" : "NOT SET"
+            );
+            map = tt.map({
+              key: TOMTOM_API_KEY || "demo",
+              container: "map",
+              center: [currentLon, currentLat],
+              zoom: 13,
+              style:
+                "https://api.tomtom.com/style/2/custom/style/dG9tdG9tQEBAbmlnaHQtc3R5bGU7MDs0YzFhYTdiYS1mYzc3LTRiNjUtYjRmNy1lNDkzZGRkMTlmMWE.json?key=" +
+                (TOMTOM_API_KEY || "demo"),
+            });
+            console.log("Map initialized successfully");
+
+            trafficLayer = tt.trafficLayer({
+              key: TOMTOM_API_KEY || "demo",
+              trafficFlow: true,
+              trafficIncidents: false,
+            });
+
+            trafficIncidentsLayer = tt.trafficLayer({
+              key: TOMTOM_API_KEY || "demo",
+              trafficFlow: false,
+              trafficIncidents: true,
+            });
+
+            map.on("load", function () {
+              // Resize map to ensure it displays correctly
+              map.resize();
+              addMapMarkers();
+              updateMapMode();
+            });
+
+            map.on("error", function (e) {
+              console.error("Map error:", e);
+            });
+
+            // Also resize after a short delay to ensure container is fully visible
+            setTimeout(() => {
+              if (map) {
+                map.resize();
+              }
+            }, 500);
+          } catch (e) {
+            console.error("Error initializing map:", e);
+          }
+        } else if (typeof tt === "undefined") {
+          console.error(
+            "TomTom SDK not loaded. Please check if TomTom scripts are included."
+          );
+          const mapContainer = document.getElementById("map");
+          if (mapContainer) {
+            mapContainer.innerHTML =
+              '<div style="padding: 2rem; text-align: center; color: #666;"><p>⚠️ TomTom SDK not loaded. Please refresh the page.</p></div>';
+          }
+        } else if (map) {
+          // Map already exists, just resize it
+          map.resize();
+        }
+      }
+
+      function addMapMarkers() {
+        if (!map) return;
+
+        markers.forEach((m) => m.remove());
+        markers = [];
+
+        const zones = [
+          {
+            lat: 18.5204,
+            lon: 73.8567,
+            type: "busy",
+            name: "FC Road - High Traffic",
+            aqi: 120,
+            noise: 75,
+          },
+          {
+            lat: 18.5314,
+            lon: 73.8446,
+            type: "calm",
+            name: "Koregaon Park - Calm Zone",
+            aqi: 65,
+            noise: 45,
+          },
+          {
+            lat: 18.5074,
+            lon: 73.8077,
+            type: "pollution",
+            name: "Industrial Area - High Pollution",
+            aqi: 150,
+            noise: 80,
+          },
+          {
+            lat: 18.5362,
+            lon: 73.897,
+            type: "calm",
+            name: "Viman Nagar - Low Traffic",
+            aqi: 70,
+            noise: 50,
+          },
+        ];
+
+        zones.forEach((zone) => {
+          const icon =
+            currentMode === "citizen"
+              ? zone.type === "busy"
+                ? "🚗"
+                : zone.type === "calm"
+                ? "🌿"
+                : "😷"
+              : "📍";
+
+          const el = document.createElement("div");
+          el.className = "custom-marker";
+          el.innerHTML = `<div style="font-size: 24px; cursor: pointer;">${icon}</div>`;
+
+          const popup = new tt.Popup({ offset: 35 }).setHTML(
+            `<div style="padding: 10px;">
+                      <strong>${zone.name}</strong><br>
+                      <small>Type: ${zone.type}</small><br>
+                      ${
+                        currentMode === "expert"
+                          ? `
+                          <small>AQI: ${zone.aqi}</small><br>
+                          <small>Noise: ${zone.noise} dB</small>
+                      `
+                          : ""
+                      }
+                  </div>`
+          );
+
+          const marker = new tt.Marker({ element: el })
+            .setLngLat([zone.lon, zone.lat])
+            .setPopup(popup)
+            .addTo(map);
+
+          markers.push(marker);
+        });
+      }
+
+      function updateMapMode() {
+        if (!map) return;
+
+        if (currentMode === "citizen") {
+          if (trafficLayer.isOnTheMap()) {
+            map.removeLayer(trafficLayer);
+          }
+          if (trafficIncidentsLayer.isOnTheMap()) {
+            map.removeLayer(trafficIncidentsLayer);
+          }
+          addMapMarkers();
+        } else {
+          const trafficFlowCheckbox = document.querySelector(
+            '#expert-legend input[data-layer="traffic-flow"]'
+          );
+          const trafficIncidentsCheckbox = document.querySelector(
+            '#expert-legend input[data-layer="traffic-incidents"]'
+          );
+          const poiClustersCheckbox = document.querySelector(
+            '#expert-legend input[data-layer="poi-clusters"]'
+          );
+
+          if (
+            trafficFlowCheckbox &&
+            trafficFlowCheckbox.checked &&
+            !trafficLayer.isOnTheMap()
+          ) {
+            map.addLayer(trafficLayer);
+          } else if (
+            trafficFlowCheckbox &&
+            !trafficFlowCheckbox.checked &&
+            trafficLayer.isOnTheMap()
+          ) {
+            map.removeLayer(trafficLayer);
+          }
+
+          if (
+            trafficIncidentsCheckbox &&
+            trafficIncidentsCheckbox.checked &&
+            !trafficIncidentsLayer.isOnTheMap()
+          ) {
+            map.addLayer(trafficIncidentsLayer);
+          } else if (
+            trafficIncidentsCheckbox &&
+            !trafficIncidentsCheckbox.checked &&
+            trafficIncidentsLayer.isOnTheMap()
+          ) {
+            map.removeLayer(trafficIncidentsLayer);
+          }
+
+          if (poiClustersCheckbox && poiClustersCheckbox.checked) {
+            addMapMarkers();
+          } else if (poiClustersCheckbox && !poiClustersCheckbox.checked) {
+            markers.forEach((m) => m.remove());
+            markers = [];
+          }
+        }
+      }
+
+      document.querySelectorAll(".mode-btn").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          document
+            .querySelectorAll(".mode-btn")
+            .forEach((b) => b.classList.remove("active"));
+          this.classList.add("active");
+
+          currentMode = this.dataset.mode;
+
+          if (currentMode === "citizen") {
+            document.getElementById("citizen-legend").style.display = "block";
+            document.getElementById("expert-legend").style.display = "none";
+          } else {
+            document.getElementById("citizen-legend").style.display = "none";
+            document.getElementById("expert-legend").style.display = "block";
+          }
+
+          updateMapMode();
+        });
+      });
+
+      document
+        .querySelectorAll('#expert-legend input[type="checkbox"]')
+        .forEach((checkbox) => {
+          checkbox.addEventListener("change", function () {
+            if (!map) return;
+
+            const layerType = this.dataset.layer;
+
+            if (layerType === "traffic-flow") {
+              if (this.checked && !trafficLayer.isOnTheMap()) {
+                map.addLayer(trafficLayer);
+              } else if (!this.checked && trafficLayer.isOnTheMap()) {
+                map.removeLayer(trafficLayer);
+              }
+            } else if (layerType === "traffic-incidents") {
+              if (this.checked && !trafficIncidentsLayer.isOnTheMap()) {
+                map.addLayer(trafficIncidentsLayer);
+              } else if (!this.checked && trafficIncidentsLayer.isOnTheMap()) {
+                map.removeLayer(trafficIncidentsLayer);
+              }
+            } else if (layerType === "poi-clusters") {
+              if (this.checked) {
+                addMapMarkers();
+              } else {
+                markers.forEach((m) => m.remove());
+                markers = [];
+              }
+            }
+          });
+        });
+
+      function getCurrentLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              currentLat = position.coords.latitude;
+              currentLon = position.coords.longitude;
+              document.getElementById(
+                "location-input"
+              ).value = `${currentLat.toFixed(4)}, ${currentLon.toFixed(4)}`;
+
+              if (map) {
+                map.setCenter([currentLon, currentLat]);
+              }
+            },
+            (error) => {
+              alert(
+                "Unable to get your location. Using default location (Pune)."
+              );
+            }
+          );
+        } else {
+          alert("Geolocation is not supported by your browser.");
+        }
+      }
+
+      async function analyzeLocation() {
+        const input = document.getElementById("location-input").value;
+
+        let lat = currentLat;
+        let lon = currentLon;
+
+        if (input.includes(",")) {
+          const coords = input.split(",");
+          lat = parseFloat(coords[0]);
+          lon = parseFloat(coords[1]);
+        }
+
+        try {
+          const response = await fetch("/api/location/analyze", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              lat,
+              lon,
+              query: input || "points of interest",
+            }),
+          });
+
+          const data = await response.json();
+          displayAnalysisResults(data);
+        } catch (error) {
+          console.error("Analysis error:", error);
+          alert("Failed to analyze location. Please try again.");
+        }
+      }
+
+      function displayAnalysisResults(data) {
+        const resultsDiv = document.getElementById("analysis-results");
+        const contentDiv = document.getElementById("analysis-content");
+
+        let html = `
+              <div class="ai-insight">${data.insight}</div>
+              
+              <div class="metrics-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0;">
+                  <div class="metric-card" style="background: var(--light-bg); padding: 1rem; border-radius: 10px; text-align: center;">
+                      <h4>Air Quality Index</h4>
+                      <p style="font-size: 2rem; font-weight: bold; color: ${
+                        data.metrics.aqi < 100
+                          ? "var(--primary)"
+                          : "var(--accent)"
+                      };">${data.metrics.aqi}</p>
+                  </div>
+                  <div class="metric-card" style="background: var(--light-bg); padding: 1rem; border-radius: 10px; text-align: center;">
+                      <h4>Noise Level</h4>
+                      <p style="font-size: 2rem; font-weight: bold; color: var(--accent);">${
+                        data.metrics.noise_level
+                      } dB</p>
+                  </div>
+                  <div class="metric-card" style="background: var(--light-bg); padding: 1rem; border-radius: 10px; text-align: center;">
+                      <h4>Traffic Level</h4>
+                      <p style="font-size: 2rem; font-weight: bold; color: var(--primary-dark);">${
+                        data.metrics.traffic_level
+                      }%</p>
+                  </div>
+              </div>
+              
+              <h4>Traffic Pattern Analysis (ML-Powered)</h4>
+              <p style="margin: 1rem 0;">${data.traffic_pattern.pattern}</p>
+              
+              <h4 style="margin-top: 2rem;">Points of Interest (TomTom API)</h4>
+              <div style="display: grid; gap: 1rem; margin-top: 1rem;">
+          `;
+
+        data.locations.forEach((loc) => {
+          html += `
+                  <div style="background: var(--light-bg); padding: 1rem; border-radius: 8px;">
+                      <strong>${loc.name}</strong><br>
+                      <small style="color: #666;">
+                          ${loc.category} | Zone Type: ${
+            loc.zone_type || "Analyzing..."
+          } | 
+                          Coordinates: ${loc.lat.toFixed(4)}, ${loc.lon.toFixed(
+            4
+          )}
+                      </small>
+                  </div>
+              `;
+        });
+
+        html += "</div>";
+
+        contentDiv.innerHTML = html;
+        resultsDiv.style.display = "block";
+      }
+
+      async function loadDashboard() {
+        try {
+          const response = await fetch("/api/dashboard");
+          const data = await response.json();
+
+          updateGauge("green-score", data.user.green_score, 100);
+          updateGauge("aqi", data.metrics.aqi, 200);
+          updateGauge("noise", data.metrics.noise, 100);
+          updateGauge("traffic", data.metrics.traffic, 100);
+
+          document.getElementById(
+            "co2-saved"
+          ).textContent = `${data.user.co2_saved} kg`;
+          document.getElementById("clean-trips").textContent =
+            data.user.clean_trips;
+          document.getElementById(
+            "eco-streak"
+          ).textContent = `${data.streak} days`;
+          document.getElementById("eco-points").textContent =
+            data.user.eco_points;
+
+          document.getElementById("main-insight").textContent = data.insight;
+
+          const badgesContainer = document.getElementById("badges-container");
+          badgesContainer.innerHTML = data.badges
+            .map(
+              (badge) => `
+                  <div class="badge-item">
+                      <div class="badge-icon">${badge.badge_icon}</div>
+                      <div>${badge.badge_name}</div>
+                  </div>
+              `
+            )
+            .join("");
+        } catch (error) {
+          console.error("Dashboard error:", error);
+        }
+      }
+
+      function updateGauge(id, value, max) {
+        const percentage = (value / max) * 100;
+        const offset = 283 - (283 * percentage) / 100;
+
+        const gauge = document.getElementById(`${id}-gauge`);
+        const text = document.getElementById(`${id}-text`);
+
+        if (gauge) gauge.style.strokeDashoffset = offset;
+        if (text) text.textContent = Math.round(value);
+      }
+
+      function toggleChatbot() {
+        const chatbot = document.getElementById("chatbot-window");
+        chatbot.style.display =
+          chatbot.style.display === "none" ? "flex" : "none";
+      }
+
+      async function sendChatMessage() {
+        const input = document.getElementById("chatbot-input");
+        const message = input.value.trim();
+
+        if (!message) return;
+
+        const messagesDiv = document.getElementById("chatbot-messages");
+
+        messagesDiv.innerHTML += `<div class="user-message">${message}</div>`;
+        input.value = "";
+
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+        try {
+          const response = await fetch("/api/chatbot", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message }),
+          });
+
+          const data = await response.json();
+          messagesDiv.innerHTML += `<div class="bot-message">${data.response}</div>`;
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        } catch (error) {
+          console.error("Chatbot error:", error);
+          messagesDiv.innerHTML += `<div class="bot-message">Sorry, I'm having trouble right now. Please try again!</div>`;
+        }
+      }
+
+      function showRouteModal() {
+        document.getElementById("route-modal").style.display = "block";
+      }
+
+      function closeRouteModal() {
+        document.getElementById("route-modal").style.display = "none";
+      }
+
+      async function planRoute() {
+        const startLoc = document.getElementById("start-location").value;
+        const endLoc = document.getElementById("end-location").value;
+        const routeType = document.querySelector(
+          'input[name="route-type"]:checked'
+        ).value;
+
+        if (!endLoc) {
+          alert("Please enter a destination");
+          return;
+        }
+
+        const startCoords = startLoc
+          ? parseCoords(startLoc)
+          : { lat: currentLat, lon: currentLon };
+        const endCoords = parseCoords(endLoc) || { lat: 18.5362, lon: 73.897 };
+
+        try {
+          const response = await fetch("/api/route/plan", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              start_lat: startCoords.lat,
+              start_lon: startCoords.lon,
+              end_lat: endCoords.lat,
+              end_lon: endCoords.lon,
+              route_type: routeType,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (data.route && data.route.legs && data.route.legs[0].points) {
+            if (map && typeof tt !== "undefined") {
+              const coordinates = data.route.legs[0].points.map((p) => [
+                p.longitude,
+                p.latitude,
+              ]);
+
+              if (map.getSource("route")) {
+                map.removeLayer("route");
+                map.removeSource("route");
+              }
+
+              map.addLayer({
+                id: "route",
+                type: "line",
+                source: {
+                  type: "geojson",
+                  data: {
+                    type: "Feature",
+                    properties: {},
+                    geometry: {
+                      type: "LineString",
+                      coordinates: coordinates,
+                    },
+                  },
+                },
+                layout: {
+                  "line-join": "round",
+                  "line-cap": "round",
+                },
+                paint: {
+                  "line-color": routeType === "eco" ? "#10b981" : "#3b82f6",
+                  "line-width": 5,
+                },
+              });
+
+              const bounds = new tt.LngLatBounds();
+              coordinates.forEach((coord) => bounds.extend(coord));
+              map.fitBounds(bounds, { padding: 50 });
+
+              showSection("map");
+            }
+          }
+
+          document.getElementById("route-results").innerHTML = `
+                  <div style="background: var(--light-bg); padding: 1.5rem; border-radius: 10px; margin-top: 1rem;">
+                      <h3>🎉 Route Planned Successfully!</h3>
+                      <p><strong>Distance:</strong> ${data.distance_km} km</p>
+                      <p><strong>Travel Time:</strong> ${
+                        data.travel_time_min
+                      } minutes</p>
+                      <p><strong>Route Type:</strong> ${
+                        data.route_type === "eco"
+                          ? "Eco-Friendly 🌿"
+                          : "Fastest ⚡"
+                      }</p>
+                      <p><strong>Eco Points Earned:</strong> +${
+                        data.eco_points_earned
+                      } points</p>
+                      ${
+                        data.co2_saved > 0
+                          ? `<p><strong>CO₂ Saved:</strong> ${data.co2_saved} kg 🌍</p>`
+                          : ""
+                      }
+                      <div style="background: var(--primary); color: white; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                          🏅 Great choice! You're making a positive impact! The route is now displayed on the map.
+                      </div>
+                  </div>
+              `;
+        } catch (error) {
+          console.error("Route planning error:", error);
+          alert("Failed to plan route. Please try again.");
+        }
+      }
+
+      function parseCoords(input) {
+        if (input.includes(",")) {
+          const parts = input.split(",");
+          return { lat: parseFloat(parts[0]), lon: parseFloat(parts[1]) };
+        }
+        return null;
+      }
+
+      async function loadCommunityPosts() {
+        try {
+          const response = await fetch("/api/community/posts");
+          const data = await response.json();
+
+          const feedDiv = document.getElementById("community-feed");
+          feedDiv.innerHTML = data.posts
+            .map(
+              (post) => `
+                  <div class="post-item">
+                      <div class="post-header">
+                          <div class="post-title">${post.title}</div>
+                          <span class="post-type-badge">${post.post_type.replace(
+                            "_",
+                            " "
+                          )}</span>
+                      </div>
+                      <p>${post.content}</p>
+                      <div class="post-meta">
+                          <i class="fas fa-map-marker-alt"></i> ${
+                            post.location
+                          } | <i class="fas fa-user"></i> ${post.username} | 
+                          ${new Date(post.created_at).toLocaleDateString()}
+                      </div>
+                      <button class="upvote-btn" onclick="upvotePost(${
+                        post.id
+                      })">
+                          <i class="fas fa-thumbs-up"></i> Upvote (${
+                            post.upvotes
+                          })
+                      </button>
+                  </div>
+              `
+            )
+            .join("");
+        } catch (error) {
+          console.error("Error loading posts:", error);
+        }
+      }
+
+      async function loadLeaderboard() {
+        try {
+          const response = await fetch("/api/leaderboard");
+          const data = await response.json();
+
+          const leaderboardDiv = document.getElementById("leaderboard-list");
+          leaderboardDiv.innerHTML = data.leaderboard
+            .map(
+              (user, index) => `
+                  <div class="leaderboard-item">
+                      <span class="rank">${
+                        index === 0
+                          ? "🥇"
+                          : index === 1
+                          ? "🥈"
+                          : index === 2
+                          ? "🥉"
+                          : index + 1
+                      }</span>
+                      <div style="flex: 1;">
+                          <strong>${user.username}</strong><br>
+                          <small>${user.eco_points} points | ${
+                user.co2_saved
+              } kg CO₂ saved</small>
+                      </div>
+                      <div style="text-align: right;">
+                          <div>Green Score: ${user.green_score}</div>
+                          <small>${user.streak_days} day streak</small>
+                      </div>
+                  </div>
+              `
+            )
+            .join("");
+        } catch (error) {
+          console.error("Error loading leaderboard:", error);
+        }
+      }
+
+      function showPostModal() {
+        document.getElementById("post-modal").style.display = "block";
+      }
+
+      function closePostModal() {
+        document.getElementById("post-modal").style.display = "none";
+      }
+
+      async function submitPost() {
+        const title = document.getElementById("post-title").value;
+        const content = document.getElementById("post-content").value;
+        const location = document.getElementById("post-location").value;
+        const postType = document.getElementById("post-type").value;
+
+        if (!title || !content || !location) {
+          alert("Please fill in all fields");
+          return;
+        }
+
+        try {
+          await fetch("/api/community/post", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              title,
+              content,
+              location,
+              post_type: postType,
+            }),
+          });
+
+          closePostModal();
+          loadCommunityPosts();
+
+          document.getElementById("post-title").value = "";
+          document.getElementById("post-content").value = "";
+          document.getElementById("post-location").value = "";
+        } catch (error) {
+          console.error("Error creating post:", error);
+          alert("Failed to create post. Please try again.");
+        }
+      }
+
+      async function upvotePost(postId) {
+        try {
+          await fetch(`/api/community/upvote/${postId}`, { method: "POST" });
+          loadCommunityPosts();
+        } catch (error) {
+          console.error("Error upvoting:", error);
+        }
+      }
+
+      window.onclick = function (event) {
+        const routeModal = document.getElementById("route-modal");
+        const postModal = document.getElementById("post-modal");
+        if (event.target === routeModal) {
+          closeRouteModal();
+        }
+        if (event.target === postModal) {
+          closePostModal();
+        }
+      };
+
+      // Add event listeners for navigation buttons
+      document.addEventListener("DOMContentLoaded", function () {
+        // Set up navigation button click handlers
+        document.querySelectorAll(".nav-btn").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const sectionName = this.getAttribute("data-section");
+            if (sectionName) {
+              showSection(sectionName);
+            }
+          });
+        });
+      });
+
+      window.onload = function () {
+        loadDashboard();
+
+        const insights = [
+          "AI-powered urban intelligence at your fingertips 🧠",
+          "Making cities greener, one route at a time 🌿",
+          "Your personal eco-assistant for sustainable living 🌍",
+        ];
+        document.getElementById("main-insight").textContent =
+          insights[Math.floor(Math.random() * insights.length)];
+      };
+    </script>
+  </body>
+</html>
