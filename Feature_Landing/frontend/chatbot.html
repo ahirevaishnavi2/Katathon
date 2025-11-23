@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Chatbot | Gyatah</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        --primary: #2e7d32;
+        --primary-light: #4caf50;
+        --primary-dark: #1b5e20;
+        --secondary: #1976d2;
+        --secondary-light: #42a5f5;
+        --secondary-dark: #0d47a1;
+        --accent: #ff9800;
+        --accent-light: #ffb74d;
+        --accent-dark: #f57c00;
+        --light-bg: #f5f7fa;
+        --light-card: #ffffff;
+        --light-text: #333333;
+        --light-border: #e0e0e0;
+        --dark-bg: #121212;
+        --dark-card: #1e1e1e;
+        --dark-text: #e0e0e0;
+        --dark-border: #333333;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        --shadow-dark: 0 10px 30px rgba(0, 0, 0, 0.3);
+        --radius: 16px;
+        --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background-color: var(--light-bg);
+        color: var(--light-text);
+        transition: var(--transition);
+        overflow-x: hidden;
+        line-height: 1.6;
+      }
+
+      body.dark-mode {
+        background-color: var(--dark-bg);
+        color: var(--dark-text);
+      }
+
+      .container {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* Animated Background */
+      .animated-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+      }
+
+      .bg-circle {
+        position: absolute;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          var(--primary-light),
+          var(--secondary-light)
+        );
+        opacity: 0.1;
+        animation: float 20s infinite linear;
+      }
+
+      .bg-circle:nth-child(1) {
+        width: 300px;
+        height: 300px;
+        top: 10%;
+        left: 5%;
+        animation-delay: 0s;
+      }
+
+      .bg-circle:nth-child(2) {
+        width: 200px;
+        height: 200px;
+        top: 60%;
+        left: 80%;
+        animation-delay: 5s;
+      }
+
+      .bg-circle:nth-child(3) {
+        width: 400px;
+        height: 400px;
+        top: 40%;
+        left: 40%;
+        animation-delay: 10s;
+      }
+
+      .bg-circle:nth-child(4) {
+        width: 150px;
+        height: 150px;
+        top: 80%;
+        left: 10%;
+        animation-delay: 15s;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+        33% {
+          transform: translate(30px, -50px) rotate(120deg);
+        }
+        66% {
+          transform: translate(-20px, 20px) rotate(240deg);
+        }
+        100% {
+          transform: translate(0, 0) rotate(360deg);
+        }
+      }
+
+      /* Header Styles */
+      header {
+        padding: 25px 0;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        transition: var(--transition);
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow);
+      }
+
+      .dark-mode header {
+        background: rgba(30, 30, 30, 0.9);
+        box-shadow: var(--shadow-dark);
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .logo-icon {
+        width: 50px;
+        height: 50px;
+        background: var(--primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+      }
+
+      .logo:hover .logo-icon {
+        transform: rotate(15deg) scale(1.1);
+      }
+
+      .logo-text {
+        font-size: 1.8rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 30px;
+      }
+
+      .nav-link {
+        color: var(--light-text);
+        text-decoration: none;
+        font-weight: 500;
+        position: relative;
+        transition: var(--transition);
+      }
+
+      .dark-mode .nav-link {
+        color: var(--dark-text);
+      }
+
+      .nav-link:after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -5px;
+        left: 0;
+        background: var(--primary);
+        transition: var(--transition);
+      }
+
+      .nav-link:hover {
+        color: var(--primary);
+      }
+
+      .nav-link:hover:after {
+        width: 100%;
+      }
+
+      .mode-toggle {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background: var(--light-card);
+        padding: 12px 20px;
+        border-radius: 50px;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .dark-mode .mode-toggle {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+      }
+
+      .toggle-label {
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 30px;
+      }
+
+      .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--primary);
+        transition: var(--transition);
+        border-radius: 34px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 22px;
+        width: 22px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: var(--transition);
+        border-radius: 50%;
+      }
+
+      input:checked + .slider {
+        background-color: var(--secondary);
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(30px);
+      }
+
+      /* Chatbot Page Styles */
+      .chatbot {
+        padding: 150px 0 80px;
+      }
+
+      .page-header {
+        margin-bottom: 40px;
+      }
+
+      .page-header h1 {
+        font-size: 2.8rem;
+        margin-bottom: 15px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .page-header p {
+        font-size: 1.2rem;
+        color: var(--light-text);
+        max-width: 600px;
+      }
+
+      .dark-mode .page-header p {
+        color: var(--dark-text);
+      }
+
+      .back-button {
+        display: inline-flex;
+        align-items: center;
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 500;
+        margin-bottom: 30px;
+        transition: var(--transition);
+      }
+
+      .back-button:hover {
+        color: var(--primary-dark);
+        transform: translateX(-5px);
+      }
+
+      /* Chatbot Layout */
+      .chatbot-layout {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 30px;
+      }
+
+      /* Chatbot Card */
+      .chatbot-card {
+        background: var(--light-card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        border: 2px solid rgba(59, 130, 246, 0.2);
+        height: 600px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .dark-mode .chatbot-card {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+        border: 2px solid rgba(59, 130, 246, 0.1);
+      }
+
+      .chatbot-header {
+        padding: 20px 25px;
+        border-bottom: 1px solid var(--light-border);
+        background: rgba(0, 0, 0, 0.02);
+      }
+
+      .dark-mode .chatbot-header {
+        border-bottom: 1px solid var(--dark-border);
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .chatbot-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .dark-mode .chatbot-title {
+        color: var(--primary-light);
+      }
+
+      .chatbot-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+      }
+
+      .chatbot-messages {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .message {
+        display: flex;
+        gap: 12px;
+        max-width: 80%;
+      }
+
+      .message.user {
+        align-self: flex-end;
+        flex-direction: row-reverse;
+      }
+
+      .message-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.9rem;
+        flex-shrink: 0;
+      }
+
+      .message.user .message-avatar {
+        background: rgba(59, 130, 246, 0.2);
+        color: #3b82f6;
+      }
+
+      .message.bot .message-avatar {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+      }
+
+      .message-content {
+        padding: 15px 20px;
+        border-radius: 18px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .message.user .message-content {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border-top-right-radius: 0;
+      }
+
+      .message.bot .message-content {
+        background: var(--light-card);
+        border: 1px solid var(--light-border);
+        border-top-left-radius: 0;
+      }
+
+      .dark-mode .message.bot .message-content {
+        background: var(--dark-card);
+        border: 1px solid var(--dark-border);
+      }
+
+      .chatbot-input {
+        padding: 20px;
+        border-top: 1px solid var(--light-border);
+        background: rgba(0, 0, 0, 0.02);
+      }
+
+      .dark-mode .chatbot-input {
+        border-top: 1px solid var(--dark-border);
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .input-form {
+        display: flex;
+        gap: 10px;
+      }
+
+      .message-input {
+        flex: 1;
+        padding: 12px 18px;
+        border: 1px solid var(--light-border);
+        border-radius: 50px;
+        background: var(--light-card);
+        color: var(--light-text);
+        font-family: inherit;
+        transition: var(--transition);
+      }
+
+      .dark-mode .message-input {
+        border: 1px solid var(--dark-border);
+        background: var(--dark-card);
+        color: var(--dark-text);
+      }
+
+      .message-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+      }
+
+      .send-button {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border: none;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: var(--transition);
+        box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+      }
+
+      .send-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+      }
+
+      .chatbot-footer {
+        padding: 10px 20px;
+        text-align: center;
+        font-size: 0.8rem;
+        color: var(--light-text);
+        border-top: 1px solid var(--light-border);
+        background: rgba(0, 0, 0, 0.02);
+      }
+
+      .dark-mode .chatbot-footer {
+        color: var(--dark-text);
+        border-top: 1px solid var(--dark-border);
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      /* Features Menu */
+      .features-menu {
+        background: var(--light-card);
+        border-radius: var(--radius);
+        padding: 25px;
+        box-shadow: var(--shadow);
+        border: 2px solid rgba(76, 175, 80, 0.1);
+        height: 600px;
+        overflow-y: auto;
+      }
+
+      .dark-mode .features-menu {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+        border: 2px solid rgba(76, 175, 80, 0.05);
+      }
+
+      .menu-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .dark-mode .menu-title {
+        color: var(--primary-light);
+      }
+
+      .features-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .feature-button {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        background: rgba(76, 175, 80, 0.08);
+        border: 1px solid rgba(76, 175, 80, 0.2);
+        border-radius: 12px;
+        text-decoration: none;
+        transition: var(--transition);
+        cursor: pointer;
+      }
+
+      .dark-mode .feature-button {
+        background: rgba(76, 175, 80, 0.05);
+        border: 1px solid rgba(76, 175, 80, 0.1);
+      }
+
+      .feature-button:hover {
+        background: rgba(76, 175, 80, 0.15);
+        transform: translateX(5px);
+      }
+
+      .feature-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+      }
+
+      .feature-text {
+        flex: 1;
+      }
+
+      .feature-name {
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 5px;
+      }
+
+      .dark-mode .feature-name {
+        color: var(--primary-light);
+      }
+
+      .feature-description {
+        font-size: 0.85rem;
+        color: var(--light-text);
+      }
+
+      .dark-mode .feature-description {
+        color: var(--dark-text);
+      }
+
+      /* Quick Actions */
+      .quick-actions {
+        margin-top: 30px;
+      }
+
+      .actions-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .dark-mode .actions-title {
+        color: var(--primary-light);
+      }
+
+      .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .action-button {
+        padding: 10px 15px;
+        background: rgba(25, 118, 210, 0.08);
+        border: 1px solid rgba(25, 118, 210, 0.2);
+        border-radius: 10px;
+        font-size: 0.85rem;
+        color: var(--secondary);
+        text-align: center;
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .dark-mode .action-button {
+        background: rgba(25, 118, 210, 0.05);
+        border: 1px solid rgba(25, 118, 210, 0.1);
+        color: var(--secondary-light);
+      }
+
+      .action-button:hover {
+        background: rgba(25, 118, 210, 0.15);
+      }
+
+      /* Footer */
+      footer {
+        background: var(--light-card);
+        padding: 60px 0 30px;
+        margin-top: 40px;
+        border-top: 1px solid var(--light-border);
+      }
+
+      .dark-mode footer {
+        background: var(--dark-card);
+        border-top: 1px solid var(--dark-border);
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        margin-bottom: 40px;
+      }
+
+      .footer-column h3 {
+        font-size: 1.4rem;
+        margin-bottom: 25px;
+        color: var(--primary);
+      }
+
+      .dark-mode .footer-column h3 {
+        color: var(--primary-light);
+      }
+
+      .footer-links {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .footer-links a {
+        color: var(--light-text);
+        text-decoration: none;
+        transition: var(--transition);
+        position: relative;
+        padding-left: 0;
+      }
+
+      .dark-mode .footer-links a {
+        color: var(--dark-text);
+      }
+
+      .footer-links a:before {
+        content: "›";
+        position: absolute;
+        left: 0;
+        opacity: 0;
+        transition: var(--transition);
+      }
+
+      .footer-links a:hover {
+        color: var(--primary);
+        padding-left: 15px;
+      }
+
+      .footer-links a:hover:before {
+        opacity: 1;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .social-link {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: var(--transition);
+      }
+
+      .social-link:hover {
+        transform: translateY(-5px);
+        background: var(--primary-dark);
+      }
+
+      .copyright {
+        text-align: center;
+        padding-top: 30px;
+        border-top: 1px solid var(--light-border);
+        color: var(--light-text);
+      }
+
+      .dark-mode .copyright {
+        border-top: 1px solid var(--dark-border);
+        color: var(--dark-text);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 992px) {
+        .nav-links {
+          display: none;
+        }
+
+        .page-header h1 {
+          font-size: 2.2rem;
+        }
+
+        .chatbot-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .features-menu {
+          height: auto;
+          order: -1;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .chatbot {
+          padding: 130px 0 60px;
+        }
+
+        .page-header h1 {
+          font-size: 1.8rem;
+        }
+
+        .chatbot-card {
+          height: 500px;
+        }
+
+        .message {
+          max-width: 90%;
+        }
+
+        .actions-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body class="light-mode">
+    <div class="animated-bg">
+      <div class="bg-circle"></div>
+      <div class="bg-circle"></div>
+      <div class="bg-circle"></div>
+      <div class="bg-circle"></div>
+    </div>
+
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <div class="logo">
+            <div class="logo-icon">
+              <i class="fas fa-leaf"></i>
+            </div>
+            <div class="logo-text">GYATAH</div>
+          </div>
+
+          <div class="nav-links">
+            <a href="#" class="nav-link">Dashboard</a>
+            <a href="#" class="nav-link">Eco-Routes</a>
+            <a href="#" class="nav-link">Challenges</a>
+            <a href="#" class="nav-link">Community</a>
+            <a href="#" class="nav-link">Profile</a>
+          </div>
+
+          <div class="mode-toggle" id="modeToggle">
+            <span class="toggle-label">Light</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="modeToggleCheckbox" />
+              <span class="slider"></span>
+            </label>
+            <span class="toggle-label">Dark</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="chatbot">
+      <div class="container">
+        <a href="#" class="back-button">
+          <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+        </a>
+
+        <div class="page-header">
+          <h1>AI Chatbot</h1>
+          <p>
+            Get help and information about sustainable living from our AI
+            assistant
+          </p>
+        </div>
+
+        <div class="chatbot-layout">
+          <div class="chatbot-card">
+            <div class="chatbot-header">
+              <h2 class="chatbot-title">
+                <div class="chatbot-icon">
+                  <i class="fas fa-robot"></i>
+                </div>
+                Gatyah AI Assistant
+              </h2>
+            </div>
+            <div class="chatbot-messages" id="chat-messages">
+              <div class="message bot">
+                <div class="message-avatar">
+                  <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                  Hello! I'm your Gatyah eco-assistant. Ask me anything about
+                  sustainable living, public transport routes, or your city's
+                  environmental data.
+                </div>
+              </div>
+              <div class="message user">
+                <div class="message-avatar">ME</div>
+                <div class="message-content">
+                  How can I reduce my carbon footprint today?
+                </div>
+              </div>
+              <div class="message bot">
+                <div class="message-avatar">
+                  <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                  Here are 3 impactful ways to reduce your footprint today:<br />
+                  • Take the metro instead of driving (saves ~2.4kg CO2)<br />
+                  • Use the Eco-Route Finder for your next trip<br />
+                  • Turn off electronics when not in use
+                </div>
+              </div>
+            </div>
+            <div class="chatbot-input">
+              <form class="input-form" id="message-form">
+                <input
+                  type="text"
+                  class="message-input"
+                  id="message-input"
+                  placeholder="Type your question..."
+                />
+                <button type="submit" class="send-button">
+                  <i class="fas fa-paper-plane"></i>
+                </button>
+              </form>
+            </div>
+            <div class="chatbot-footer">
+              AI Chatbot feature is currently under development
+            </div>
+          </div>
+
+          <div class="features-menu">
+            <h3 class="menu-title">Website Features</h3>
+            <div class="features-grid">
+              <a href="#" class="feature-button">
+                <div class="feature-icon">
+                  <i class="fas fa-route"></i>
+                </div>
+                <div class="feature-text">
+                  <div class="feature-name">Eco-Route Finder</div>
+                  <div class="feature-description">
+                    Discover the most environmentally friendly routes
+                  </div>
+                </div>
+              </a>
+
+              <a href="#" class="feature-button">
+                <div class="feature-icon">
+                  <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="feature-text">
+                  <div class="feature-name">Live Dashboard</div>
+                  <div class="feature-description">
+                    Real-time environmental metrics and traffic
+                  </div>
+                </div>
+              </a>
+
+              <a href="#" class="feature-button">
+                <div class="feature-icon">
+                  <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="feature-text">
+                  <div class="feature-name">Personal Dashboard</div>
+                  <div class="feature-description">
+                    Track your environmental impact and goals
+                  </div>
+                </div>
+              </a>
+
+              <a href="#" class="feature-button">
+                <div class="feature-icon">
+                  <i class="fas fa-trophy"></i>
+                </div>
+                <div class="feature-text">
+                  <div class="feature-name">Gamification</div>
+                  <div class="feature-description">
+                    Earn points, badges, and rewards
+                  </div>
+                </div>
+              </a>
+
+              <a href="#" class="feature-button">
+                <div class="feature-icon">
+                  <i class="fas fa-robot"></i>
+                </div>
+                <div class="feature-text">
+                  <div class="feature-name">AI Chatbot</div>
+                  <div class="feature-description">
+                    Get personalized eco-advice
+                  </div>
+                </div>
+              </a>
+
+              <a href="#" class="feature-button">
+                <div class="feature-icon">
+                  <i class="fas fa-users"></i>
+                </div>
+                <div class="feature-text">
+                  <div class="feature-name">Community Hub</div>
+                  <div class="feature-description">
+                    Connect with like-minded individuals
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <div class="quick-actions">
+              <h3 class="actions-title">Quick Actions</h3>
+              <div class="actions-grid">
+                <div class="action-button" data-action="eco-routes">
+                  Find Eco Routes
+                </div>
+                <div class="action-button" data-action="carbon-footprint">
+                  Calculate Footprint
+                </div>
+                <div class="action-button" data-action="public-transport">
+                  Public Transport Info
+                </div>
+                <div class="action-button" data-action="challenges">
+                  Current Challenges
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-column">
+            <h3>About Gyatah</h3>
+            <p>
+              Gyatah is an innovative platform that combines sustainability with
+              technology to help users make eco-friendly travel decisions.
+            </p>
+            <div class="social-links">
+              <a href="#" class="social-link"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="social-link"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="social-link"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
+            </div>
+          </div>
+          <div class="footer-column">
+            <h3>Quick Links</h3>
+            <div class="footer-links">
+              <a href="#">Home</a>
+              <a href="#">Dashboard</a>
+              <a href="#">Eco-Routes</a>
+              <a href="#">Challenges</a>
+              <a href="#">Community</a>
+            </div>
+          </div>
+          <div class="footer-column">
+            <h3>Features</h3>
+            <div class="footer-links">
+              <a href="#">Eco-Route Finder</a>
+              <a href="#">Live Dashboard</a>
+              <a href="#">Personal Dashboard</a>
+              <a href="#">Gamification</a>
+              <a href="#">AI Chatbot</a>
+            </div>
+          </div>
+          <div class="footer-column">
+            <h3>Contact Us</h3>
+            <div class="footer-links">
+              <a href="mailto:info@gyatah.com">info@gyatah.com</a>
+              <a href="tel:+1234567890">+1 (234) 567-890</a>
+              <a href="#">123 Green Street, Eco City</a>
+            </div>
+          </div>
+        </div>
+        <div class="copyright">
+          &copy; 2023 Gyatah. All rights reserved. Making the world greener, one
+          route at a time.
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Mode Toggle Functionality
+      const modeToggle = document.getElementById("modeToggle");
+      const modeToggleCheckbox = document.getElementById("modeToggleCheckbox");
+      const body = document.body;
+      const toggleLabels = document.querySelectorAll(".toggle-label");
+
+      modeToggle.addEventListener("click", function () {
+        modeToggleCheckbox.checked = !modeToggleCheckbox.checked;
+        toggleMode();
+      });
+
+      modeToggleCheckbox.addEventListener("change", toggleMode);
+
+      function toggleMode() {
+        if (modeToggleCheckbox.checked) {
+          body.classList.remove("light-mode");
+          body.classList.add("dark-mode");
+          toggleLabels[0].textContent = "Dark";
+          toggleLabels[1].textContent = "Light";
+        } else {
+          body.classList.remove("dark-mode");
+          body.classList.add("light-mode");
+          toggleLabels[0].textContent = "Light";
+          toggleLabels[1].textContent = "Dark";
+        }
+      }
+
+      // Chatbot Functionality
+      const messageForm = document.getElementById("message-form");
+      const messageInput = document.getElementById("message-input");
+      const chatMessages = document.getElementById("chat-messages");
+
+      messageForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const message = messageInput.value.trim();
+        if (!message) return;
+
+        // Add user message
+        addMessage(message, "user");
+        messageInput.value = "";
+
+        // Simulate bot response
+        setTimeout(() => {
+          let botResponse;
+
+          if (
+            message.toLowerCase().includes("route") ||
+            message.toLowerCase().includes("eco-route")
+          ) {
+            botResponse =
+              "I can help you find eco-friendly routes! You can use our Eco-Route Finder feature to discover the most sustainable travel options. Would you like me to direct you to that page?";
+          } else if (
+            message.toLowerCase().includes("carbon") ||
+            message.toLowerCase().includes("footprint")
+          ) {
+            botResponse =
+              "Reducing your carbon footprint is a great goal! I recommend checking your Personal Dashboard to track your current impact and see personalized suggestions for improvement.";
+          } else if (
+            message.toLowerCase().includes("challenge") ||
+            message.toLowerCase().includes("gamification")
+          ) {
+            botResponse =
+              "Our gamification system rewards sustainable choices! You can earn points and badges for eco-friendly activities. Check out the Gamification page to see current challenges and your progress.";
+          } else if (
+            message.toLowerCase().includes("community") ||
+            message.toLowerCase().includes("connect")
+          ) {
+            botResponse =
+              "The Community Hub is a great place to connect with others! You can share achievements, join discussions, and participate in group challenges. Would you like to visit the Community page?";
+          } else {
+            botResponse =
+              "Thanks for your question! This feature is currently under development. Full AI capabilities will be available soon. In the meantime, you can explore our features using the menu on the right.";
+          }
+
+          addMessage(botResponse, "bot");
+        }, 1000);
+      });
+
+      function addMessage(content, sender) {
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `message ${sender}`;
+
+        if (sender === "user") {
+          messageDiv.innerHTML = `
+                    <div class="message-avatar">ME</div>
+                    <div class="message-content">${content}</div>
+                `;
+        } else {
+          messageDiv.innerHTML = `
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">${content}</div>
+                `;
+        }
+
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      // Quick Actions
+      const actionButtons = document.querySelectorAll(".action-button");
+
+      actionButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          const action = this.getAttribute("data-action");
+          let message;
+
+          switch (action) {
+            case "eco-routes":
+              message =
+                "I'd like to find eco-friendly routes for my next trip.";
+              break;
+            case "carbon-footprint":
+              message = "How can I calculate and reduce my carbon footprint?";
+              break;
+            case "public-transport":
+              message = "Tell me about public transport options in my area.";
+              break;
+            case "challenges":
+              message =
+                "What sustainability challenges are currently available?";
+              break;
+            default:
+              message = "I need help with sustainability.";
+          }
+
+          messageInput.value = message;
+          messageForm.dispatchEvent(new Event("submit"));
+        });
+      });
+    </script>
+  </body>
+</html>

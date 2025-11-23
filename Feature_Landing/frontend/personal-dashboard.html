@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Eco-Dashboard | Gyatah</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #2e7d32;
+        --primary-light: #4caf50;
+        --primary-dark: #1b5e20;
+        --secondary: #1976d2;
+        --secondary-light: #42a5f5;
+        --secondary-dark: #0d47a1;
+        --accent: #ff9800;
+        --accent-light: #ffb74d;
+        --accent-dark: #f57c00;
+        --light-bg: #f5f7fa;
+        --light-card: #ffffff;
+        --light-text: #333333;
+        --light-border: #e0e0e0;
+        --dark-bg: #121212;
+        --dark-card: #1e1e1e;
+        --dark-text: #e0e0e0;
+        --dark-border: #333333;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        --shadow-dark: 0 10px 30px rgba(0, 0, 0, 0.3);
+        --radius: 20px;
+        --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background-color: var(--light-bg);
+        color: var(--light-text);
+        transition: var(--transition);
+        overflow-x: hidden;
+        line-height: 1.6;
+      }
+
+      body.dark-mode {
+        background-color: var(--dark-bg);
+        color: var(--dark-text);
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 30px;
+      }
+
+      /* Animated Background */
+      .animated-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+      }
+
+      .bg-circle {
+        position: absolute;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          var(--primary-light),
+          var(--secondary-light)
+        );
+        opacity: 0.05;
+        animation: float 25s infinite ease-in-out;
+      }
+
+      .bg-circle:nth-child(1) {
+        width: 400px;
+        height: 400px;
+        top: 5%;
+        left: 5%;
+        animation-delay: 0s;
+      }
+
+      .bg-circle:nth-child(2) {
+        width: 300px;
+        height: 300px;
+        top: 65%;
+        left: 85%;
+        animation-delay: 5s;
+      }
+
+      .bg-circle:nth-child(3) {
+        width: 500px;
+        height: 500px;
+        top: 35%;
+        left: 35%;
+        animation-delay: 10s;
+      }
+
+      .bg-circle:nth-child(4) {
+        width: 200px;
+        height: 200px;
+        top: 85%;
+        left: 15%;
+        animation-delay: 15s;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+        25% {
+          transform: translate(40px, -60px) rotate(90deg);
+        }
+        50% {
+          transform: translate(-30px, 40px) rotate(180deg);
+        }
+        75% {
+          transform: translate(20px, 30px) rotate(270deg);
+        }
+        100% {
+          transform: translate(0, 0) rotate(360deg);
+        }
+      }
+
+      /* Header Styles */
+      header {
+        padding: 25px 0;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        transition: var(--transition);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(15px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+      }
+
+      .dark-mode header {
+        background: rgba(30, 30, 30, 0.95);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .logo-icon {
+        width: 55px;
+        height: 55px;
+        background: var(--primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.6rem;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+      }
+
+      .logo:hover .logo-icon {
+        transform: rotate(15deg) scale(1.1);
+      }
+
+      .logo-text {
+        font-size: 2rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 35px;
+      }
+
+      .nav-link {
+        color: var(--light-text);
+        text-decoration: none;
+        font-weight: 500;
+        position: relative;
+        transition: var(--transition);
+        padding: 8px 0;
+      }
+
+      .dark-mode .nav-link {
+        color: var(--dark-text);
+      }
+
+      .nav-link:after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 3px;
+        bottom: 0;
+        left: 0;
+        background: var(--primary);
+        transition: var(--transition);
+        border-radius: 3px;
+      }
+
+      .nav-link:hover {
+        color: var(--primary);
+      }
+
+      .nav-link:hover:after {
+        width: 100%;
+      }
+
+      .mode-toggle {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background: var(--light-card);
+        padding: 12px 25px;
+        border-radius: 50px;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .dark-mode .mode-toggle {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+      }
+
+      .toggle-label {
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 30px;
+      }
+
+      .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--primary);
+        transition: var(--transition);
+        border-radius: 34px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 22px;
+        width: 22px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: var(--transition);
+        border-radius: 50%;
+      }
+
+      input:checked + .slider {
+        background-color: var(--secondary);
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(30px);
+      }
+
+      /* Dashboard Styles */
+      .dashboard {
+        padding: 160px 0 80px;
+      }
+
+      .dashboard-header {
+        margin-bottom: 60px;
+        text-align: center;
+      }
+
+      .dashboard-header h1 {
+        font-size: 3.2rem;
+        margin-bottom: 15px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.5px;
+      }
+
+      .dashboard-header p {
+        font-size: 1.3rem;
+        color: var(--light-text);
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      .dark-mode .dashboard-header p {
+        color: var(--dark-text);
+      }
+
+      /* Main Layout */
+      .dashboard-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 60px;
+      }
+
+      /* Score Panels */
+      .score-panels {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      .score-panel {
+        background: var(--light-card);
+        border-radius: var(--radius);
+        padding: 40px;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        border: 1px solid rgba(0, 0, 0, 0.03);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .dark-mode .score-panel {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+      }
+
+      .score-panel:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+      }
+
+      .score-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 25px;
+      }
+
+      .score-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: var(--primary);
+      }
+
+      .dark-mode .score-title {
+        color: var(--primary-light);
+      }
+
+      .score-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.6rem;
+        transition: var(--transition);
+        box-shadow: 0 8px 20px rgba(46, 125, 50, 0.3);
+      }
+
+      .score-panel:hover .score-icon {
+        transform: scale(1.1) rotate(5deg);
+      }
+
+      .score-value {
+        font-size: 4rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: var(--primary);
+        line-height: 1;
+      }
+
+      .dark-mode .score-value {
+        color: var(--primary-light);
+      }
+
+      .progress-container {
+        margin-bottom: 15px;
+      }
+
+      .progress-bar {
+        height: 12px;
+        background: #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 10px;
+      }
+
+      .dark-mode .progress-bar {
+        background: #333333;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        border-radius: 10px;
+        transition: width 1s ease-in-out;
+        box-shadow: 0 0 10px rgba(46, 125, 50, 0.3);
+      }
+
+      .progress-text {
+        font-size: 0.95rem;
+        color: var(--light-text);
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .dark-mode .progress-text {
+        color: var(--dark-text);
+      }
+
+      /* Activities Section */
+      .activities-section {
+        background: var(--light-card);
+        border-radius: var(--radius);
+        padding: 40px;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        border: 1px solid rgba(0, 0, 0, 0.03);
+      }
+
+      .dark-mode .activities-section {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+      }
+
+      .activities-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 30px;
+        color: var(--primary);
+        position: relative;
+        display: inline-block;
+      }
+
+      .dark-mode .section-title {
+        color: var(--primary-light);
+      }
+
+      .section-title:after {
+        content: "";
+        position: absolute;
+        width: 70px;
+        height: 4px;
+        background: var(--primary);
+        bottom: -10px;
+        left: 0;
+        border-radius: 2px;
+      }
+
+      .activities-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+      }
+
+      .activity-item {
+        display: flex;
+        align-items: center;
+        background: rgba(76, 175, 80, 0.08);
+        border-radius: 18px;
+        padding: 25px;
+        transition: var(--transition);
+        border: 1px solid rgba(76, 175, 80, 0.1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .dark-mode .activity-item {
+        background: rgba(76, 175, 80, 0.05);
+        border: 1px solid rgba(76, 175, 80, 0.08);
+      }
+
+      .activity-item:hover {
+        background: rgba(76, 175, 80, 0.12);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+      }
+
+      .activity-icon {
+        width: 70px;
+        height: 70px;
+        background: var(--primary);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.8rem;
+        margin-right: 20px;
+        transition: var(--transition);
+        box-shadow: 0 8px 20px rgba(46, 125, 50, 0.3);
+      }
+
+      .activity-item:hover .activity-icon {
+        transform: scale(1.1) rotate(5deg);
+      }
+
+      .activity-details {
+        flex: 1;
+      }
+
+      .activity-name {
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--primary);
+        font-size: 1.2rem;
+      }
+
+      .dark-mode .activity-name {
+        color: var(--primary-light);
+      }
+
+      .activity-description {
+        font-size: 0.9rem;
+        color: var(--light-text);
+        margin-bottom: 12px;
+      }
+
+      .dark-mode .activity-description {
+        color: var(--dark-text);
+      }
+
+      .activity-points {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .points-value {
+        font-weight: 700;
+        color: var(--primary);
+        font-size: 1.1rem;
+      }
+
+      .dark-mode .points-value {
+        color: var(--primary-light);
+      }
+
+      .add-activity-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        cursor: pointer;
+        transition: var(--transition);
+        box-shadow: 0 8px 20px rgba(46, 125, 50, 0.3);
+      }
+
+      .add-activity-btn:hover {
+        background: var(--primary-dark);
+        transform: scale(1.1) rotate(90deg);
+      }
+
+      /* Bottom Section */
+      .bottom-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+      }
+
+      /* CO2 Panel */
+      .co2-panel {
+        background: var(--light-card);
+        border-radius: var(--radius);
+        padding: 40px;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        border: 1px solid rgba(0, 0, 0, 0.03);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .dark-mode .co2-panel {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+      }
+
+      .co2-panel:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+      }
+
+      .co2-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(
+          135deg,
+          var(--secondary),
+          var(--secondary-light)
+        );
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        margin: 0 auto 25px;
+        transition: var(--transition);
+        box-shadow: 0 10px 25px rgba(25, 118, 210, 0.3);
+      }
+
+      .co2-panel:hover .co2-icon {
+        transform: scale(1.1) rotate(10deg);
+      }
+
+      .co2-value {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin: 15px 0;
+        color: var(--secondary);
+        line-height: 1;
+      }
+
+      .dark-mode .co2-value {
+        color: var(--secondary-light);
+      }
+
+      .co2-description {
+        font-size: 1rem;
+        color: var(--light-text);
+        margin-bottom: 20px;
+      }
+
+      .dark-mode .co2-description {
+        color: var(--dark-text);
+      }
+
+      .co2-equivalent {
+        display: inline-block;
+        background: rgba(25, 118, 210, 0.1);
+        color: var(--secondary);
+        padding: 10px 20px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: var(--transition);
+      }
+
+      .dark-mode .co2-equivalent {
+        background: rgba(25, 118, 210, 0.15);
+        color: var(--secondary-light);
+      }
+
+      .co2-panel:hover .co2-equivalent {
+        transform: scale(1.05);
+      }
+
+      /* Transport Panel */
+      .transport-panel {
+        background: var(--light-card);
+        border-radius: var(--radius);
+        padding: 40px;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        border: 1px solid rgba(0, 0, 0, 0.03);
+      }
+
+      .dark-mode .transport-panel {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+      }
+
+      .transport-panel:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+      }
+
+      .transport-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .transport-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-radius: 15px;
+        transition: var(--transition);
+      }
+
+      .transport-item:hover {
+        background: rgba(76, 175, 80, 0.05);
+        transform: translateX(5px);
+      }
+
+      .transport-icon {
+        width: 50px;
+        height: 50px;
+        background: var(--primary);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.3rem;
+        margin-right: 20px;
+        transition: var(--transition);
+      }
+
+      .transport-item:hover .transport-icon {
+        transform: scale(1.1);
+      }
+
+      .transport-details {
+        flex: 1;
+      }
+
+      .transport-name {
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--primary);
+      }
+
+      .dark-mode .transport-name {
+        color: var(--primary-light);
+      }
+
+      .transport-stats {
+        display: flex;
+        align-items: center;
+      }
+
+      .transport-percentage {
+        font-weight: 600;
+        color: var(--light-text);
+        width: 50px;
+      }
+
+      .dark-mode .transport-percentage {
+        color: var(--dark-text);
+      }
+
+      .transport-bar {
+        flex: 1;
+        height: 8px;
+        background: #e0e0e0;
+        border-radius: 10px;
+        margin: 0 15px;
+        overflow: hidden;
+      }
+
+      .dark-mode .transport-bar {
+        background: #333333;
+      }
+
+      .transport-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        border-radius: 10px;
+        transition: width 1s ease-in-out;
+      }
+
+      .transport-trips {
+        font-size: 0.9rem;
+        color: var(--light-text);
+        width: 70px;
+        text-align: right;
+      }
+
+      .dark-mode .transport-trips {
+        color: var(--dark-text);
+      }
+
+      /* Footer */
+      footer {
+        background: var(--light-card);
+        padding: 70px 0 40px;
+        margin-top: 80px;
+        border-top: 1px solid var(--light-border);
+      }
+
+      .dark-mode footer {
+        background: var(--dark-card);
+        border-top: 1px solid var(--dark-border);
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 50px;
+        margin-bottom: 50px;
+      }
+
+      .footer-column h3 {
+        font-size: 1.5rem;
+        margin-bottom: 25px;
+        color: var(--primary);
+      }
+
+      .dark-mode .footer-column h3 {
+        color: var(--primary-light);
+      }
+
+      .footer-links {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .footer-links a {
+        color: var(--light-text);
+        text-decoration: none;
+        transition: var(--transition);
+        position: relative;
+        padding-left: 0;
+      }
+
+      .dark-mode .footer-links a {
+        color: var(--dark-text);
+      }
+
+      .footer-links a:before {
+        content: "›";
+        position: absolute;
+        left: 0;
+        opacity: 0;
+        transition: var(--transition);
+      }
+
+      .footer-links a:hover {
+        color: var(--primary);
+        padding-left: 15px;
+      }
+
+      .footer-links a:hover:before {
+        opacity: 1;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 15px;
+        margin-top: 25px;
+      }
+
+      .social-link {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: var(--transition);
+        font-size: 1.2rem;
+      }
+
+      .social-link:hover {
+        transform: translateY(-5px);
+        background: var(--primary-dark);
+      }
+
+      .copyright {
+        text-align: center;
+        padding-top: 40px;
+        border-top: 1px solid var(--light-border);
+        color: var(--light-text);
+        font-size: 0.95rem;
+      }
+
+      .dark-mode .copyright {
+        border-top: 1px solid var(--dark-border);
+        color: var(--dark-text);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 1200px) {
+        .dashboard-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .activities-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      @media (max-width: 992px) {
+        .nav-links {
+          display: none;
+        }
+
+        .dashboard-header h1 {
+          font-size: 2.5rem;
+        }
+
+        .activities-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .bottom-section {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .dashboard {
+          padding: 140px 0 60px;
+        }
+
+        .dashboard-header h1 {
+          font-size: 2rem;
+        }
+
+        .score-panel,
+        .activities-section,
+        .co2-panel,
+        .transport-panel {
+          padding: 30px;
+        }
+
+        .activities-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body class="light-mode">
+    <div class="animated-bg">
+      <div class="bg-circle"></div>
+      <div class="bg-circle"></div>
+      <div class="bg-circle"></div>
+      <div class="bg-circle"></div>
+    </div>
+
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <div class="logo">
+            <div class="logo-icon">
+              <i class="fas fa-leaf"></i>
+            </div>
+            <div class="logo-text">GYATAH</div>
+          </div>
+
+          <div class="nav-links">
+            <a href="#" class="nav-link">Dashboard</a>
+            <a href="#" class="nav-link">Eco-Routes</a>
+            <a href="#" class="nav-link">Challenges</a>
+            <a href="#" class="nav-link">Community</a>
+            <a href="#" class="nav-link">Profile</a>
+          </div>
+
+          <div class="mode-toggle" id="modeToggle">
+            <span class="toggle-label">Light</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="modeToggleCheckbox" />
+              <span class="slider"></span>
+            </label>
+            <span class="toggle-label">Dark</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="dashboard">
+      <div class="container">
+        <div class="dashboard-header">
+          <h1>Personal Eco-Dashboard</h1>
+          <p>
+            Track your sustainability journey and carbon impact in a beautiful,
+            intuitive interface
+          </p>
+        </div>
+
+        <div class="dashboard-layout">
+          <div class="score-panels">
+            <div class="score-panel">
+              <div class="score-header">
+                <h3 class="score-title">Daily Eco-Score</h3>
+                <div class="score-icon">
+                  <i class="fas fa-leaf"></i>
+                </div>
+              </div>
+              <div class="score-value" id="daily-score">75</div>
+              <div class="progress-container">
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    id="daily-progress"
+                    style="width: 75%"
+                  ></div>
+                </div>
+                <div class="progress-text">
+                  <span>Your progress</span>
+                  <span>+5 from yesterday</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="score-panel">
+              <div class="score-header">
+                <h3 class="score-title">Weekly Eco-Score</h3>
+                <div class="score-icon">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+              </div>
+              <div class="score-value" id="weekly-score">82</div>
+              <div class="progress-container">
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    id="weekly-progress"
+                    style="width: 82%"
+                  ></div>
+                </div>
+                <div class="progress-text">
+                  <span>Your progress</span>
+                  <span>+8 from last week</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="score-panel">
+              <div class="score-header">
+                <h3 class="score-title">Overall Eco-Score</h3>
+                <div class="score-icon">
+                  <i class="fas fa-trophy"></i>
+                </div>
+              </div>
+              <div class="score-value" id="overall-score">78</div>
+              <div class="progress-container">
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    id="overall-progress"
+                    style="width: 78%"
+                  ></div>
+                </div>
+                <div class="progress-text">
+                  <span>Your level</span>
+                  <span>Green Guardian</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="activities-section">
+            <h2 class="section-title">Eco Activities</h2>
+            <div class="activities-grid">
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-walking"></i>
+                </div>
+                <div class="activity-details">
+                  <div class="activity-name">Walking</div>
+                  <div class="activity-description">
+                    Take a walk instead of driving for short distances
+                  </div>
+                  <div class="activity-points">
+                    <span class="points-value">+10 pts</span>
+                    <button
+                      class="add-activity-btn"
+                      data-activity="walking"
+                      data-points="10"
+                    >
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-bicycle"></i>
+                </div>
+                <div class="activity-details">
+                  <div class="activity-name">Cycling</div>
+                  <div class="activity-description">
+                    Use a bicycle for your commute or exercise
+                  </div>
+                  <div class="activity-points">
+                    <span class="points-value">+15 pts</span>
+                    <button
+                      class="add-activity-btn"
+                      data-activity="cycling"
+                      data-points="15"
+                    >
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-car"></i>
+                </div>
+                <div class="activity-details">
+                  <div class="activity-name">Shared Cab</div>
+                  <div class="activity-description">
+                    Share a ride with others to reduce emissions
+                  </div>
+                  <div class="activity-points">
+                    <span class="points-value">+8 pts</span>
+                    <button
+                      class="add-activity-btn"
+                      data-activity="shared-cab"
+                      data-points="8"
+                    >
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-seedling"></i>
+                </div>
+                <div class="activity-details">
+                  <div class="activity-name">Plant a Tree</div>
+                  <div class="activity-description">
+                    Contribute to reforestation efforts in your area
+                  </div>
+                  <div class="activity-points">
+                    <span class="points-value">+25 pts</span>
+                    <button
+                      class="add-activity-btn"
+                      data-activity="plant-tree"
+                      data-points="25"
+                    >
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-tint"></i>
+                </div>
+                <div class="activity-details">
+                  <div class="activity-name">Water Plant</div>
+                  <div class="activity-description">
+                    Care for plants and maintain green spaces
+                  </div>
+                  <div class="activity-points">
+                    <span class="points-value">+5 pts</span>
+                    <button
+                      class="add-activity-btn"
+                      data-activity="water-plant"
+                      data-points="5"
+                    >
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-bus"></i>
+                </div>
+                <div class="activity-details">
+                  <div class="activity-name">Public Transport</div>
+                  <div class="activity-description">
+                    Use buses, trains, or metros for travel
+                  </div>
+                  <div class="activity-points">
+                    <span class="points-value">+12 pts</span>
+                    <button
+                      class="add-activity-btn"
+                      data-activity="public-transport"
+                      data-points="12"
+                    >
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-section">
+          <div class="co2-panel">
+            <div class="co2-icon">
+              <i class="fas fa-cloud"></i>
+            </div>
+            <h3 class="section-title">CO₂ Avoided</h3>
+            <div class="co2-value" id="co2-avoided">
+              124.5<span style="font-size: 2rem"> kg</span>
+            </div>
+            <p class="co2-description">
+              Total carbon emissions saved this month
+            </p>
+            <div class="co2-equivalent">Equivalent to planting 6 trees</div>
+          </div>
+
+          <div class="transport-panel">
+            <h2 class="section-title">Transport Breakdown</h2>
+            <div class="transport-list">
+              <div class="transport-item">
+                <div class="transport-icon">
+                  <i class="fas fa-walking"></i>
+                </div>
+                <div class="transport-details">
+                  <div class="transport-name">Walking</div>
+                  <div class="transport-stats">
+                    <span class="transport-percentage">35%</span>
+                    <div class="transport-bar">
+                      <div class="transport-fill" style="width: 35%"></div>
+                    </div>
+                    <span class="transport-trips">42 trips</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="transport-item">
+                <div class="transport-icon">
+                  <i class="fas fa-bicycle"></i>
+                </div>
+                <div class="transport-details">
+                  <div class="transport-name">Cycling</div>
+                  <div class="transport-stats">
+                    <span class="transport-percentage">28%</span>
+                    <div class="transport-bar">
+                      <div class="transport-fill" style="width: 28%"></div>
+                    </div>
+                    <span class="transport-trips">34 trips</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="transport-item">
+                <div class="transport-icon">
+                  <i class="fas fa-bus"></i>
+                </div>
+                <div class="transport-details">
+                  <div class="transport-name">Bus</div>
+                  <div class="transport-stats">
+                    <span class="transport-percentage">20%</span>
+                    <div class="transport-bar">
+                      <div class="transport-fill" style="width: 20%"></div>
+                    </div>
+                    <span class="transport-trips">24 trips</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="transport-item">
+                <div class="transport-icon">
+                  <i class="fas fa-subway"></i>
+                </div>
+                <div class="transport-details">
+                  <div class="transport-name">Metro</div>
+                  <div class="transport-stats">
+                    <span class="transport-percentage">12%</span>
+                    <div class="transport-bar">
+                      <div class="transport-fill" style="width: 12%"></div>
+                    </div>
+                    <span class="transport-trips">15 trips</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="transport-item">
+                <div class="transport-icon">
+                  <i class="fas fa-car"></i>
+                </div>
+                <div class="transport-details">
+                  <div class="transport-name">Car</div>
+                  <div class="transport-stats">
+                    <span class="transport-percentage">5%</span>
+                    <div class="transport-bar">
+                      <div class="transport-fill" style="width: 5%"></div>
+                    </div>
+                    <span class="transport-trips">6 trips</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-column">
+            <h3>About Gyatah</h3>
+            <p>
+              Gyatah is an innovative platform that combines sustainability with
+              technology to help users make eco-friendly travel decisions.
+            </p>
+            <div class="social-links">
+              <a href="#" class="social-link"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="social-link"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="social-link"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
+            </div>
+          </div>
+          <div class="footer-column">
+            <h3>Quick Links</h3>
+            <div class="footer-links">
+              <a href="#">Home</a>
+              <a href="#">Dashboard</a>
+              <a href="#">Eco-Routes</a>
+              <a href="#">Challenges</a>
+              <a href="#">Community</a>
+            </div>
+          </div>
+          <div class="footer-column">
+            <h3>Features</h3>
+            <div class="footer-links">
+              <a href="#">Eco-Route Finder</a>
+              <a href="#">Live Dashboard</a>
+              <a href="#">Personal Dashboard</a>
+              <a href="#">Gamification</a>
+              <a href="#">AI Chatbot</a>
+            </div>
+          </div>
+          <div class="footer-column">
+            <h3>Contact Us</h3>
+            <div class="footer-links">
+              <a href="mailto:info@gyatah.com">info@gyatah.com</a>
+              <a href="tel:+1234567890">+1 (234) 567-890</a>
+              <a href="#">123 Green Street, Eco City</a>
+            </div>
+          </div>
+        </div>
+        <div class="copyright">
+          &copy; 2023 Gyatah. All rights reserved. Making the world greener, one
+          route at a time.
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Mode Toggle Functionality
+      const modeToggle = document.getElementById("modeToggle");
+      const modeToggleCheckbox = document.getElementById("modeToggleCheckbox");
+      const body = document.body;
+      const toggleLabels = document.querySelectorAll(".toggle-label");
+
+      modeToggle.addEventListener("click", function () {
+        modeToggleCheckbox.checked = !modeToggleCheckbox.checked;
+        toggleMode();
+      });
+
+      modeToggleCheckbox.addEventListener("change", toggleMode);
+
+      function toggleMode() {
+        if (modeToggleCheckbox.checked) {
+          body.classList.remove("light-mode");
+          body.classList.add("dark-mode");
+          toggleLabels[0].textContent = "Dark";
+          toggleLabels[1].textContent = "Light";
+        } else {
+          body.classList.remove("dark-mode");
+          body.classList.add("light-mode");
+          toggleLabels[0].textContent = "Light";
+          toggleLabels[1].textContent = "Dark";
+        }
+      }
+
+      // Activity Tracking
+      const addActivityButtons = document.querySelectorAll(".add-activity-btn");
+      const dailyScoreElement = document.getElementById("daily-score");
+      const weeklyScoreElement = document.getElementById("weekly-score");
+      const overallScoreElement = document.getElementById("overall-score");
+      const co2AvoidedElement = document.getElementById("co2-avoided");
+
+      const dailyProgress = document.getElementById("daily-progress");
+      const weeklyProgress = document.getElementById("weekly-progress");
+      const overallProgress = document.getElementById("overall-progress");
+
+      let dailyScore = 75;
+      let weeklyScore = 82;
+      let overallScore = 78;
+      let co2Avoided = 124.5;
+
+      addActivityButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          const points = parseInt(this.getAttribute("data-points"));
+          const activity = this.getAttribute("data-activity");
+
+          // Update scores
+          dailyScore += points;
+          weeklyScore += points;
+          overallScore += points;
+          co2Avoided += points * 0.1;
+
+          // Update UI
+          dailyScoreElement.textContent = dailyScore;
+          weeklyScoreElement.textContent = weeklyScore;
+          overallScoreElement.textContent = overallScore;
+          co2AvoidedElement.textContent = co2Avoided.toFixed(1) + " kg";
+
+          // Update progress bars
+          dailyProgress.style.width = Math.min(dailyScore, 100) + "%";
+          weeklyProgress.style.width = Math.min(weeklyScore, 100) + "%";
+          overallProgress.style.width = Math.min(overallScore, 100) + "%";
+
+          // Animation effect
+          this.style.transform = "scale(1.3) rotate(90deg)";
+          setTimeout(() => {
+            this.style.transform = "scale(1) rotate(0)";
+          }, 300);
+
+          // Show confirmation
+          showActivityConfirmation(activity, points);
+        });
+      });
+
+      function showActivityConfirmation(activity, points) {
+        // Create a temporary confirmation message
+        const confirmation = document.createElement("div");
+        confirmation.textContent = `+${points} points for ${activity.replace(
+          "-",
+          " "
+        )}!`;
+        confirmation.style.position = "fixed";
+        confirmation.style.bottom = "30px";
+        confirmation.style.right = "30px";
+        confirmation.style.background = "var(--primary)";
+        confirmation.style.color = "white";
+        confirmation.style.padding = "15px 25px";
+        confirmation.style.borderRadius = "50px";
+        confirmation.style.boxShadow = "var(--shadow)";
+        confirmation.style.zIndex = "1000";
+        confirmation.style.fontWeight = "600";
+        confirmation.style.fontSize = "1rem";
+        confirmation.style.animation = "fadeIn 0.5s, fadeOut 0.5s 2.5s";
+
+        document.body.appendChild(confirmation);
+
+        // Remove after 3 seconds
+        setTimeout(() => {
+          document.body.removeChild(confirmation);
+        }, 3000);
+      }
+
+      // Add CSS for fadeIn and fadeOut animations
+      const style = document.createElement("style");
+      style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(30px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            @keyframes fadeOut {
+                from { opacity: 1; transform: translateY(0); }
+                to { opacity: 0; transform: translateY(30px); }
+            }
+        `;
+      document.head.appendChild(style);
+    </script>
+  </body>
+</html>
