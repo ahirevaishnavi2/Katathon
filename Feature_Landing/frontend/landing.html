@@ -66,24 +66,6 @@
       }
 
       /* Logo Intro Animation */
-      .logo-intro {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: var(--light-bg);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-        transition: opacity 0.8s ease, transform 1.2s ease;
-      }
-
-      .dark-mode .logo-intro {
-        background: var(--dark-bg);
-      }
-
       .logo-intro.hidden {
         opacity: 0;
         pointer-events: none;
@@ -100,7 +82,6 @@
         color: white;
         font-size: 3.5rem;
         box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.7);
-        animation: pulse 1.5s infinite, zoomOut 1.2s ease 1.5s forwards;
       }
 
       @keyframes pulse {
@@ -807,11 +788,6 @@
   </head>
   <body class="light-mode">
     <!-- Logo Intro Animation -->
-    <div class="logo-intro" id="logoIntro">
-      <div class="intro-logo">
-        <i class="fas fa-leaf"></i>
-      </div>
-    </div>
 
     <div class="animated-bg">
       <div class="bg-circle"></div>
@@ -824,27 +800,31 @@
       <div class="container">
         <div class="header-content">
           <div class="logo">
-            <div class="logo-icon">
-              <i class="fas fa-leaf"></i>
+            <div class="intro-logo" style="background: none; box-shadow: none">
+              <img
+                src="{{ url_for('static', filename='Logo.png') }}"
+                alt="Logo"
+                style="width: 50px; height: auto"
+              />
             </div>
             <div class="logo-text">GYATAH</div>
           </div>
 
           <div class="nav-links">
-            <a href="#" class="nav-link">Home</a>
-            <a href="#" class="nav-link">Features</a>
+            <a href="home.html" class="nav-link">Home</a>
+            <a href="landing.html" class="nav-link">Features</a>
             <a href="#" class="nav-link">How It Works</a>
             <a href="#" class="nav-link">Testimonials</a>
             <a href="#" class="nav-link">Contact</a>
           </div>
 
           <div class="mode-toggle" id="modeToggle">
-            <span class="toggle-label">Citizen</span>
+            <span class="toggle-label">Light</span>
             <label class="toggle-switch">
               <input type="checkbox" id="modeToggleCheckbox" />
               <span class="slider"></span>
             </label>
-            <span class="toggle-label">Expert</span>
+            <span class="toggle-label">Dark</span>
           </div>
         </div>
       </div>
@@ -880,7 +860,7 @@
               Discover the most environmentally friendly routes for your
               journeys, reducing your carbon footprint with every trip.
             </p>
-            <a href="http://localhost:8080/map" class="feature-link"
+            <a href="http://127.0.0.1:8080/" class="feature-link"
               >Explore Eco-Routes <i class="fas fa-arrow-right"></i
             ></a>
           </div>
@@ -894,7 +874,9 @@
               Real-time tracking of environmental metrics and traffic conditions
               to help you make informed travel decisions.
             </p>
-            <a href="http://127.0.0.1:5000/" class="feature-link"
+            <a
+              href="https://gyatah-ecoroute.onrender.com/map"
+              class="feature-link"
               >View Dashboard <i class="fas fa-arrow-right"></i
             ></a>
           </div>
@@ -1006,8 +988,8 @@
           <div class="footer-column">
             <h3>Quick Links</h3>
             <div class="footer-links">
-              <a href="#">Home</a>
-              <a href="#">Features</a>
+              <a href="home.html">Home</a>
+              <a href="landing.html">Features</a>
               <a href="#">How It Works</a>
               <a href="#">Testimonials</a>
               <a href="#">Contact</a>
@@ -1016,8 +998,8 @@
           <div class="footer-column">
             <h3>Features</h3>
             <div class="footer-links">
-              <a href="eco-routes.html">Eco-Route Finder</a>
-              <a href="live-dashboard.html">Live Dashboard</a>
+              <a href="http://localhost:8080/map">Eco-Route Finder</a>
+              <a href="http://127.0.0.1:5000/">Live Location Dashboard</a>
               <a href="personal-dashboard.html">Personal Dashboard</a>
               <a href="gamification.html">Gamification</a>
               <a href="chatbot.html">AI Chatbot</a>

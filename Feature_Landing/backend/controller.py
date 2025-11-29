@@ -1,87 +1,82 @@
-# app.py
-from flask import Flask, render_template, jsonify, request
-import json
+from flask import Flask, render_template, abort, redirect
 
-app = Flask(__name__)
+import os
 
-# Main landing page
-@app.route('/')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "frontend"))
+STATIC_DIR = os.path.join(FRONTEND_DIR, "static")
+
+app = Flask(
+    __name__,
+    template_folder=FRONTEND_DIR,
+    static_folder=STATIC_DIR
+)
+
+# ============================
+# Main Landing Page
+# ============================
+
+@app.route("/home")
 def index():
-    return render_template('index.html')
+    return render_template("home.html")   # will load directly
 
-# Citizen Mode Pages
-@app.route('/eco-routes')
+
+@app.route("/landing.html")
 def eco_routes():
-    return render_template('eco-routes.html')
+    return render_template("landing.html")
 
-@app.route('/live-dashboard')
+
+# ============================
+# Citizen Mode Pages
+# ============================
+
+
+@app.route("/eco-dashboard")
 def live_dashboard():
-    return render_template('live-dashboard.html')
+    return redirect("http://127.0.0.1:5000/")
 
-@app.route('/personal-dashboard')
+@app.route("/live-dashboard")
+def eco_dashboard():
+    return redirect("https://gyatah-ecoroute.onrender.com/map")
+
+
+@app.route("/personal-dashboard.html")
 def personal_dashboard():
-    return render_template('personal-dashboard.html')
+    return render_template("personal-dashboard.html")
 
-@app.route('/gamification')
+@app.route("/gamification.html")
 def gamification():
-    return render_template('gamification.html')
+    return render_template("gamification.html")
 
-@app.route('/chatbot')
+@app.route("/chatbot.html")
 def chatbot():
-    return render_template('chatbot.html')
+    return render_template("chatbot.html")
 
-@app.route('/community')
+@app.route("/community.html")
 def community():
-    return render_template('community.html')
+    return render_template("community.html")
 
+
+# ============================
 # Expert Mode Pages
-@app.route('/expert-dashboard')
+# ============================
+
+@app.route("/expert_Landing.html")
 def expert_dashboard():
-    return render_template('expert-dashboard.html')
+    return render_template("expert_Landing.html")
 
-@app.route('/expert-analytics')
-def expert_analytics():
-    return render_template('expert-analytics.html')
+@app.route("/anomaly-prediction")
+def anomaly_prediction():
+    return redirect("http://localhost:8000/gyatah_dashboard.html")
 
-# API endpoints for data
-@app.route('/api/user-data')
-def get_user_data():
-    # Sample user data - in a real app, this would come from a database
-    user_data = {
-        "name": "Alex Johnson",
-        "eco_score": 85,
-        "carbon_saved": "124 kg",
-        "routes_taken": 47,
-        "badges": 5
-    }
-    return jsonify(user_data)
+@app.route("/analytic-dashboard")
+def analytic_dashboard():
+    return redirect("https://gyatah-ecoroute.onrender.com/dashboard")
 
-@app.route('/api/route-data')
-def get_route_data():
-    # Sample route data
-    route_data = {
-        "eco_routes": [
-            {"name": "Work Commute", "savings": "2.3 kg CO2", "time": "25 min"},
-            {"name": "Grocery Run", "savings": "1.1 kg CO2", "time": "15 min"},
-            {"name": "Weekend Trip", "savings": "5.7 kg CO2", "time": "45 min"}
-        ]
-    }
-    return jsonify(route_data)
 
-@app.route('/api/community-stats')
-def get_community_stats():
-    # Sample community data
-    community_stats = {
-        "total_users": 12543,
-        "total_co2_saved": "245,321 kg",
-        "active_challenges": 7,
-        "top_performers": [
-            {"name": "EcoWarrior22", "score": 95},
-            {"name": "GreenTraveler", "score": 92},
-            {"name": "SustainableSam", "score": 89}
-        ]
-    }
-    return jsonify(community_stats)
+# ============================
+# Run the App
+# ============================
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)

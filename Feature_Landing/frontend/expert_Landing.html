@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expert Mode - Gyatah Eco Navigation</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #2e7d32;
+        --primary-light: #4caf50;
+        --primary-dark: #1b5e20;
+        --secondary: #1976d2;
+        --secondary-light: #42a5f5;
+        --secondary-dark: #0d47a1;
+        --accent: #ff9800;
+        --accent-light: #ffb74d;
+        --accent-dark: #f57c00;
+        --light-bg: #f5f7fa;
+        --light-card: #ffffff;
+        --light-text: #333333;
+        --light-border: #e0e0e0;
+        --dark-bg: #121212;
+        --dark-card: #1e1e1e;
+        --dark-text: #e0e0e0;
+        --dark-border: #333333;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        --shadow-dark: 0 10px 30px rgba(0, 0, 0, 0.3);
+        --radius: 16px;
+        --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background-color: var(--light-bg);
+        color: var(--light-text);
+        transition: var(--transition);
+        overflow-x: hidden;
+        line-height: 1.6;
+      }
+
+      body.dark-mode {
+        background-color: var(--dark-bg);
+        color: var(--dark-text);
+      }
+
+      .container {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* Animated Background */
+      .animated-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+      }
+
+      .bg-circle {
+        position: absolute;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          var(--primary-light),
+          var(--secondary-light)
+        );
+        opacity: 0.1;
+        animation: float 20s infinite linear;
+      }
+
+      .bg-circle:nth-child(1) {
+        width: 300px;
+        height: 300px;
+        top: 10%;
+        left: 5%;
+        animation-delay: 0s;
+      }
+
+      .bg-circle:nth-child(2) {
+        width: 200px;
+        height: 200px;
+        top: 60%;
+        left: 80%;
+        animation-delay: 5s;
+      }
+
+      .bg-circle:nth-child(3) {
+        width: 400px;
+        height: 400px;
+        top: 40%;
+        left: 40%;
+        animation-delay: 10s;
+      }
+
+      .bg-circle:nth-child(4) {
+        width: 150px;
+        height: 150px;
+        top: 80%;
+        left: 10%;
+        animation-delay: 15s;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+        33% {
+          transform: translate(30px, -50px) rotate(120deg);
+        }
+        66% {
+          transform: translate(-20px, 20px) rotate(240deg);
+        }
+        100% {
+          transform: translate(0, 0) rotate(360deg);
+        }
+      }
+
+      /* Header Styles */
+      header {
+        padding: 25px 0;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        transition: var(--transition);
+      }
+
+      .header-scrolled {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow);
+        padding: 15px 0;
+      }
+
+      .dark-mode .header-scrolled {
+        background: rgba(30, 30, 30, 0.9);
+        box-shadow: var(--shadow-dark);
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .logo-icon {
+        width: 50px;
+        height: 50px;
+        background: var(--primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+      }
+
+      .logo:hover .logo-icon {
+        transform: rotate(15deg) scale(1.1);
+      }
+
+      .logo-text {
+        font-size: 1.8rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 30px;
+      }
+
+      .nav-link {
+        color: var(--light-text);
+        text-decoration: none;
+        font-weight: 500;
+        position: relative;
+        transition: var(--transition);
+      }
+
+      .dark-mode .nav-link {
+        color: var(--dark-text);
+      }
+
+      .nav-link:after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -5px;
+        left: 0;
+        background: var(--primary);
+        transition: var(--transition);
+      }
+
+      .nav-link:hover {
+        color: var(--primary);
+      }
+
+      .nav-link:hover:after {
+        width: 100%;
+      }
+
+      .mode-toggle {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background: var(--light-card);
+        padding: 12px 20px;
+        border-radius: 50px;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .dark-mode .mode-toggle {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+      }
+
+      .toggle-label {
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 30px;
+      }
+
+      .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--primary);
+        transition: var(--transition);
+        border-radius: 34px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 22px;
+        width: 22px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: var(--transition);
+        border-radius: 50%;
+      }
+
+      input:checked + .slider {
+        background-color: var(--secondary);
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(30px);
+      }
+
+      /* Hero Section */
+      .hero {
+        padding: 180px 0 100px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-content {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .hero h1 {
+        font-size: 4rem;
+        margin-bottom: 25px;
+        line-height: 1.2;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: fadeInUp 1s ease;
+      }
+
+      .hero p {
+        font-size: 1.3rem;
+        margin: 0 auto 40px;
+        max-width: 700px;
+        color: var(--light-text);
+        animation: fadeInUp 1s ease 0.2s both;
+      }
+
+      .dark-mode .hero p {
+        color: var(--dark-text);
+      }
+
+      /* Features Section */
+      .features {
+        padding: 100px 0;
+      }
+
+      .section-title {
+        text-align: center;
+        font-size: 2.8rem;
+        margin-bottom: 80px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        position: relative;
+      }
+
+      .section-title:after {
+        content: "";
+        position: absolute;
+        width: 100px;
+        height: 4px;
+        background: var(--primary);
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 2px;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+        gap: 40px;
+      }
+
+      .feature-card {
+        background: var(--light-card);
+        border-radius: var(--radius);
+        padding: 40px 30px;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        border: 1px solid var(--light-border);
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+        min-height: 450px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .dark-mode .feature-card {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+        border: 1px solid var(--dark-border);
+      }
+
+      .feature-card:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+      }
+
+      .feature-card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .feature-icon {
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        color: white;
+        font-size: 3rem;
+        transition: var(--transition);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .feature-card:hover .feature-icon {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .feature-card h3 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        color: var(--primary);
+      }
+
+      .dark-mode .feature-card h3 {
+        color: var(--primary-light);
+      }
+
+      .feature-card p {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        margin-bottom: 25px;
+        color: var(--light-text);
+        flex: 1;
+      }
+
+      .dark-mode .feature-card p {
+        color: var(--dark-text);
+      }
+
+      .feature-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        color: white;
+        background: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+        position: relative;
+        padding: 16px 30px;
+        border-radius: 50px;
+        width: 80%;
+        margin: 0 auto;
+        box-shadow: var(--shadow);
+      }
+
+      .feature-link:after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: rgba(255, 255, 255, 0.2);
+        transition: var(--transition);
+        border-radius: 50px;
+      }
+
+      .feature-link:hover {
+        color: white;
+        gap: 15px;
+        background: var(--primary-dark);
+        transform: translateY(-5px);
+      }
+
+      .feature-link:hover:after {
+        width: 100%;
+      }
+
+      /* Stats Section */
+      .stats {
+        padding: 80px 0;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        text-align: center;
+        border-radius: var(--radius);
+        margin: 60px 0;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 40px;
+      }
+
+      .stat-item h3 {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+
+      .stat-item p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      /* Footer */
+      footer {
+        background: var(--light-card);
+        padding: 60px 0 30px;
+        margin-top: 40px;
+        border-top: 1px solid var(--light-border);
+      }
+
+      .dark-mode footer {
+        background: var(--dark-card);
+        border-top: 1px solid var(--dark-border);
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        margin-bottom: 40px;
+      }
+
+      .footer-column h3 {
+        font-size: 1.4rem;
+        margin-bottom: 25px;
+        color: var(--primary);
+      }
+
+      .dark-mode .footer-column h3 {
+        color: var(--primary-light);
+      }
+
+      .footer-links {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .footer-links a {
+        color: var(--light-text);
+        text-decoration: none;
+        transition: var(--transition);
+        position: relative;
+        padding-left: 0;
+      }
+
+      .dark-mode .footer-links a {
+        color: var(--dark-text);
+      }
+
+      .footer-links a:before {
+        content: "›";
+        position: absolute;
+        left: 0;
+        opacity: 0;
+        transition: var(--transition);
+      }
+
+      .footer-links a:hover {
+        color: var(--primary);
+        padding-left: 15px;
+      }
+
+      .footer-links a:hover:before {
+        opacity: 1;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .social-link {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: var(--transition);
+      }
+
+      .social-link:hover {
+        transform: translateY(-5px);
+        background: var(--primary-dark);
+      }
+
+      .copyright {
+        text-align: center;
+        padding-top: 30px;
+        border-top: 1px solid var(--light-border);
+        color: var(--light-text);
+      }
+
+      .dark-mode .copyright {
+        border-top: 1px solid var(--dark-border);
+        color: var(--dark-text);
+      }
+
+      /* Animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .feature-card {
+        animation: fadeInUp 0.6s ease forwards;
+        opacity: 0;
+      }
+
+      .feature-card:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .feature-card:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 992px) {
+        .hero h1 {
+          font-size: 3rem;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .features-grid {
+          grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        }
+      }
+
+      @media (max-width: 768px) {
+        .hero {
+          padding: 150px 0 80px;
+        }
+
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+
+        .hero p {
+          font-size: 1.1rem;
+        }
+
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .section-title {
+          font-size: 2.2rem;
+        }
+
+        .footer-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body class="light-mode">
+    <div class="animated-bg">
+      <div class="bg-circle"></div>
+      <div class="bg-circle"></div>
+      <div class="bg-circle"></div>
+      <div class="bg-circle"></div>
+    </div>
+
+    <header id="header">
+      <div class="container">
+        <div class="header-content">
+          <div class="logo">
+            <div class="intro-logo" style="background: none; box-shadow: none">
+              <img
+                src="./Logo.png"
+                alt="logo"
+                style="width: 50px; height: auto"
+              />
+            </div>
+
+            <div class="logo-text">GYATAH</div>
+          </div>
+
+          <div class="nav-links">
+            <a href="#" class="nav-link">Home</a>
+            <a href="#" class="nav-link">Dashboard</a>
+            <a href="#" class="nav-link">Analytics</a>
+            <a href="#" class="nav-link">Reports</a>
+            <a href="#" class="nav-link">Contact</a>
+          </div>
+
+          <div class="mode-toggle" id="modeToggle">
+            <span class="toggle-label">Light</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="modeToggleCheckbox" />
+              <span class="slider"></span>
+            </label>
+            <span class="toggle-label">Dark</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h1>Expert Analytics Dashboard</h1>
+          <p>
+            Access advanced environmental analytics, predictive modeling, and
+            comprehensive data insights to make informed decisions for
+            sustainable navigation and urban planning.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="container">
+        <h2 class="section-title">Expert Features</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-chart-bar"></i>
+            </div>
+            <h3>Analytics Dashboard</h3>
+            <p>
+              Comprehensive environmental analytics with real-time data
+              visualization, trend analysis, and predictive modeling. Monitor
+              traffic patterns, pollution levels, and sustainability metrics
+              across multiple data sources.
+            </p>
+            <a
+              href="https://gyatah-ecoroute.onrender.com/dashboard"
+              class="feature-link"
+              >Access Dashboard <i class="fas fa-arrow-right"></i
+            ></a>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3>Anomaly Detection & Prediction</h3>
+            <p>
+              Advanced AI-powered system that detects unusual patterns in
+              environmental data, traffic flows, and pollution levels. Get
+              predictive alerts and recommendations for proactive urban planning
+              and crisis management.
+            </p>
+            <a
+              href="http://localhost:8000/gyatah_dashboard.html"
+              class="feature-link"
+              >Explore Anomaly Detection <i class="fas fa-arrow-right"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <section class="stats">
+        <div class="stats-grid">
+          <div class="stat-item">
+            <h3>15K+</h3>
+            <p>Data Points Analyzed</p>
+          </div>
+          <div class="stat-item">
+            <h3>98%</h3>
+            <p>Prediction Accuracy</p>
+          </div>
+          <div class="stat-item">
+            <h3>24/7</h3>
+            <p>Real-time Monitoring</p>
+          </div>
+          <div class="stat-item">
+            <h3>500+</h3>
+            <p>Expert Users</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-column">
+            <h3>About Gyatah Expert</h3>
+            <p>
+              Gyatah Expert provides advanced analytics and predictive modeling
+              for sustainability professionals, urban planners, and
+              environmental researchers.
+            </p>
+            <div class="social-links">
+              <a href="#" class="social-link"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="social-link"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="social-link"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
+            </div>
+          </div>
+          <div class="footer-column">
+            <h3>Quick Links</h3>
+            <div class="footer-links">
+              <a href="index.html">Home</a>
+              <a href="#">Dashboard</a>
+              <a href="#">Analytics</a>
+              <a href="#">Reports</a>
+              <a href="#">Contact</a>
+            </div>
+          </div>
+          <div class="footer-column">
+            <h3>Expert Resources</h3>
+            <div class="footer-links">
+              <a href="#">API Documentation</a>
+              <a href="#">Data Sources</a>
+              <a href="#">Methodology</a>
+              <a href="#">Case Studies</a>
+              <a href="#">Research Papers</a>
+            </div>
+          </div>
+          <div class="footer-column">
+            <h3>Contact Expert Support</h3>
+            <div class="footer-links">
+              <a href="mailto:expert@gyatah.com">expert@gyatah.com</a>
+              <a href="tel:+1234567890">+1 (234) 567-890</a>
+              <a href="#">Schedule a Demo</a>
+            </div>
+          </div>
+        </div>
+        <div class="copyright">
+          &copy; 2023 Gyatah Expert. All rights reserved. Advanced analytics for
+          a sustainable future.
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Mode Toggle Functionality
+      const modeToggle = document.getElementById("modeToggle");
+      const modeToggleCheckbox = document.getElementById("modeToggleCheckbox");
+      const body = document.body;
+      const toggleLabels = document.querySelectorAll(".toggle-label");
+
+      modeToggle.addEventListener("click", function () {
+        modeToggleCheckbox.checked = !modeToggleCheckbox.checked;
+        toggleMode();
+      });
+
+      modeToggleCheckbox.addEventListener("change", toggleMode);
+
+      function toggleMode() {
+        if (modeToggleCheckbox.checked) {
+          body.classList.remove("light-mode");
+          body.classList.add("dark-mode");
+          toggleLabels[0].textContent = "Light";
+          toggleLabels[1].textContent = "Dark";
+        } else {
+          body.classList.remove("dark-mode");
+          body.classList.add("light-mode");
+          toggleLabels[0].textContent = "Light";
+          toggleLabels[1].textContent = "Dark";
+        }
+      }
+
+      // Header scroll effect
+      window.addEventListener("scroll", function () {
+        const header = document.getElementById("header");
+        if (window.scrollY > 100) {
+          header.classList.add("header-scrolled");
+        } else {
+          header.classList.remove("header-scrolled");
+        }
+      });
+
+      // Animation on scroll for feature cards
+      const featureCards = document.querySelectorAll(".feature-card");
+
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      };
+
+      const observer = new IntersectionObserver(function (entries) {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.animationPlayState = "running";
+          }
+        });
+      }, observerOptions);
+
+      featureCards.forEach((card) => {
+        card.style.animationPlayState = "paused";
+        observer.observe(card);
+      });
+    </script>
+  </body>
+</html>

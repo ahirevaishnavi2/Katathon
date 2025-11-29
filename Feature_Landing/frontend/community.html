@@ -1055,9 +1055,14 @@
       <div class="container">
         <div class="header-content">
           <div class="logo">
-            <div class="logo-icon">
-              <i class="fas fa-leaf"></i>
+            <div class="intro-logo" style="background: none; box-shadow: none">
+              <img
+                src="{{ url_for('static', filename='Logo.png') }}"
+                alt="Logo"
+                style="width: 50px; height: auto"
+              />
             </div>
+
             <div class="logo-text">GYATAH</div>
           </div>
 
@@ -1083,7 +1088,7 @@
 
     <section class="community">
       <div class="container">
-        <a href="#" class="back-button">
+        <a href="landing.html" class="back-button">
           <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
         </a>
 
@@ -1506,21 +1511,22 @@
           <div class="footer-column">
             <h3>Quick Links</h3>
             <div class="footer-links">
-              <a href="#">Home</a>
-              <a href="#">Dashboard</a>
-              <a href="#">Eco-Routes</a>
-              <a href="#">Challenges</a>
-              <a href="#">Community</a>
+              <a href="home.html">Home</a>
+              <a href="landing.html">Features</a>
+              <a href="#">How It Works</a>
+              <a href="#">Testimonials</a>
+              <a href="#">Contact</a>
             </div>
           </div>
           <div class="footer-column">
             <h3>Features</h3>
             <div class="footer-links">
-              <a href="#">Eco-Route Finder</a>
-              <a href="#">Live Dashboard</a>
-              <a href="#">Personal Dashboard</a>
-              <a href="#">Gamification</a>
-              <a href="#">AI Chatbot</a>
+              <a href="http://localhost:8080/map">Eco-Route Finder</a>
+              <a href="http://127.0.0.1:5000/">Live Location Dashboard</a>
+              <a href="personal-dashboard.html">Personal Dashboard</a>
+              <a href="gamification.html">Gamification</a>
+              <a href="chatbot.html">AI Chatbot</a>
+              <a href="community.html">Community Hub</a>
             </div>
           </div>
           <div class="footer-column">

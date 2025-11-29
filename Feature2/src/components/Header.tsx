@@ -4,9 +4,9 @@ import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
   const location = useLocation();
-  
+
   const isActive = (path: string) => location.pathname === path;
-  
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
       <div className="container mx-auto px-4">
@@ -17,33 +17,49 @@ const Header = () => {
               <Leaf className="w-6 h-6 text-white" />
             </div>
             <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-eco">
-              GeoSense+
+              Gyatah
             </span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <Link 
-              to="/map" 
-              className={`transition-colors font-medium ${isActive('/map') ? 'text-primary' : 'text-foreground hover:text-primary'}`}
+            <Link
+              to="/map"
+              className={`transition-colors font-medium ${
+                isActive("/map")
+                  ? "text-primary"
+                  : "text-foreground hover:text-primary"
+              }`}
             >
               Map
             </Link>
-            <Link 
-              to="/dashboard" 
-              className={`transition-colors font-medium ${isActive('/dashboard') ? 'text-primary' : 'text-foreground hover:text-primary'}`}
+            <Link
+              to="/dashboard"
+              className={`transition-colors font-medium ${
+                isActive("/dashboard")
+                  ? "text-primary"
+                  : "text-foreground hover:text-primary"
+              }`}
             >
               Dashboard
             </Link>
-            <Link 
-              to="/rewards" 
-              className={`transition-colors font-medium ${isActive('/rewards') ? 'text-primary' : 'text-foreground hover:text-primary'}`}
+            <Link
+              to="/rewards"
+              className={`transition-colors font-medium ${
+                isActive("/rewards")
+                  ? "text-primary"
+                  : "text-foreground hover:text-primary"
+              }`}
             >
               Rewards
             </Link>
-            <Link 
-              to="/community" 
-              className={`transition-colors font-medium ${isActive('/community') ? 'text-primary' : 'text-foreground hover:text-primary'}`}
+            <Link
+              to="/community"
+              className={`transition-colors font-medium ${
+                isActive("/community")
+                  ? "text-primary"
+                  : "text-foreground hover:text-primary"
+              }`}
             >
               Community
             </Link>

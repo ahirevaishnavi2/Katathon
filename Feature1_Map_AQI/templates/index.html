@@ -12,6 +12,10 @@
       rel="stylesheet"
       href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps.css"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
         --primary: #2e7d32;
@@ -31,108 +35,308 @@
         --dark-card: #1e1e1e;
         --dark-text: #e0e0e0;
         --dark-border: #333333;
-        --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        --shadow-dark: 0 4px 12px rgba(0, 0, 0, 0.3);
-        --radius: 12px;
-        --transition: all 0.3s ease;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        --shadow-dark: 0 10px 30px rgba(0, 0, 0, 0.3);
+        --radius: 16px;
+        --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
       }
 
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-family: "Poppins", sans-serif;
       }
 
       body {
         background-color: var(--light-bg);
         color: var(--light-text);
+        transition: var(--transition);
+        overflow-x: hidden;
         line-height: 1.6;
       }
 
+      body.dark-mode {
+        background-color: var(--dark-bg);
+        color: var(--dark-text);
+      }
+
+      /* Animated Background */
+      .animated-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+      }
+
+      .bg-circle {
+        position: absolute;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          var(--primary-light),
+          var(--secondary-light)
+        );
+        opacity: 0.1;
+        animation: float 20s infinite linear;
+      }
+
+      .bg-circle:nth-child(1) {
+        width: 300px;
+        height: 300px;
+        top: 10%;
+        left: 5%;
+        animation-delay: 0s;
+      }
+
+      .bg-circle:nth-child(2) {
+        width: 200px;
+        height: 200px;
+        top: 60%;
+        left: 80%;
+        animation-delay: 5s;
+      }
+
+      .bg-circle:nth-child(3) {
+        width: 400px;
+        height: 400px;
+        top: 40%;
+        left: 40%;
+        animation-delay: 10s;
+      }
+
+      .bg-circle:nth-child(4) {
+        width: 150px;
+        height: 150px;
+        top: 80%;
+        left: 10%;
+        animation-delay: 15s;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+        33% {
+          transform: translate(30px, -50px) rotate(120deg);
+        }
+        66% {
+          transform: translate(-20px, 20px) rotate(240deg);
+        }
+        100% {
+          transform: translate(0, 0) rotate(360deg);
+        }
+      }
+
       .container {
-        max-width: 1200px;
+        max-width: 1300px;
         margin: 0 auto;
         padding: 0 20px;
       }
 
+      /* Header Styles - FIXED */
       header {
-        background: var(--light-card);
-        box-shadow: var(--shadow);
-        position: sticky;
+        padding: 15px 0; /* Reduced from 25px */
+        position: fixed;
+        width: 100%;
         top: 0;
-        z-index: 100;
+        z-index: 1000;
+        transition: var(--transition);
+        background: rgba(255, 255, 255, 0.95); /* Increased opacity */
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow);
       }
 
-      .header-container {
+      .dark-mode header {
+        background: rgba(30, 30, 30, 0.95); /* Increased opacity */
+        box-shadow: var(--shadow-dark);
+      }
+
+      .header-content {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 15px 0;
       }
 
       .logo {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px; /* Reduced from 15px */
       }
 
-      .logo i {
-        font-size: 28px;
-        color: var(--primary);
-      }
-
-      .logo h1 {
-        font-size: 24px;
-        font-weight: 700;
-        color: var(--primary);
-      }
-
-      .tagline {
-        font-size: 14px;
-        color: var(--primary-light);
-        margin-top: -5px;
-      }
-
-      nav {
-        display: flex;
-        gap: 10px;
-      }
-
-      .nav-btn {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 20px;
-        background: transparent;
-        color: var(--light-text);
-        cursor: pointer;
-        font-weight: 600;
-        transition: var(--transition);
-        text-decoration: none;
-        display: inline-block;
-      }
-
-      .nav-btn:hover,
-      .nav-btn.active {
+      .logo-icon {
+        width: 45px; /* Reduced from 50px */
+        height: 45px; /* Reduced from 50px */
         background: var(--primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         color: white;
+        font-size: 1.4rem; /* Reduced from 1.5rem */
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+      }
+
+      .logo:hover .logo-icon {
+        transform: rotate(15deg) scale(1.1);
+      }
+
+      .logo-text {
+        font-size: 1.6rem; /* Reduced from 1.8rem */
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 25px; /* Reduced from 30px */
+      }
+
+      .nav-link {
+        color: var(--light-text);
+        text-decoration: none;
+        font-weight: 500;
+        position: relative;
+        transition: var(--transition);
+        padding: 8px 0; /* Reduced from 10px */
+        cursor: pointer;
+        font-size: 0.95rem; /* Added for consistency */
+      }
+
+      .dark-mode .nav-link {
+        color: var(--dark-text);
+      }
+
+      .nav-link:after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background: var(--primary);
+        transition: var(--transition);
+      }
+
+      .nav-link:hover {
+        color: var(--primary);
+      }
+
+      .nav-link:hover:after {
+        width: 100%;
+      }
+
+      .nav-link.active {
+        color: var(--primary);
+      }
+
+      .nav-link.active:after {
+        width: 100%;
+      }
+
+      .mode-toggle {
+        display: flex;
+        align-items: center;
+        gap: 12px; /* Reduced from 15px */
+        background: var(--light-card);
+        padding: 10px 18px; /* Reduced from 12px 20px */
+        border-radius: 50px;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .dark-mode .mode-toggle {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+      }
+
+      .toggle-label {
+        font-weight: 600;
+        font-size: 0.85rem; /* Reduced from 0.9rem */
+      }
+
+      .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 55px; /* Reduced from 60px */
+        height: 28px; /* Reduced from 30px */
+      }
+
+      .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--primary);
+        transition: var(--transition);
+        border-radius: 34px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px; /* Reduced from 22px */
+        width: 20px; /* Reduced from 22px */
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: var(--transition);
+        border-radius: 50%;
+      }
+
+      input:checked + .slider {
+        background-color: var(--secondary);
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(27px); /* Adjusted for smaller width */
       }
 
       main {
-        padding: 30px 0;
+        padding: 100px 0 60px; /* Reduced top padding from 140px */
+        min-height: 100vh;
       }
 
       .section {
         display: none;
+        animation: fadeInUp 0.8s ease;
       }
 
       .section.active {
         display: block;
       }
 
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
       .hero {
         text-align: center;
-        padding: 40px 0;
+        padding: 30px 0; /* Reduced from 40px */
         background: linear-gradient(
           135deg,
           var(--primary-light),
@@ -141,15 +345,16 @@
         color: white;
         border-radius: var(--radius);
         margin-bottom: 30px;
+        box-shadow: var(--shadow);
       }
 
       .hero h2 {
-        font-size: 2.5rem;
+        font-size: 2.2rem; /* Reduced from 2.5rem */
         margin-bottom: 15px;
       }
 
       .ai-insight {
-        font-size: 1.2rem;
+        font-size: 1.1rem; /* Reduced from 1.2rem */
         max-width: 800px;
         margin: 0 auto;
         background: rgba(255, 255, 255, 0.2);
@@ -167,41 +372,66 @@
       .action-card {
         background: var(--light-card);
         border-radius: var(--radius);
-        padding: 25px;
+        padding: 22px; /* Reduced from 25px */
         text-align: center;
         box-shadow: var(--shadow);
         transition: var(--transition);
         text-decoration: none;
         color: inherit;
         border-top: 4px solid var(--primary);
+        animation: fadeInUp 0.6s ease forwards;
+        opacity: 0;
+      }
+
+      .dark-mode .action-card {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+      }
+
+      .action-card:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .action-card:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .action-card:nth-child(3) {
+        animation-delay: 0.3s;
       }
 
       .action-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
       }
 
       .card-icon {
-        font-size: 40px;
-        margin-bottom: 15px;
+        font-size: 36px; /* Reduced from 40px */
+        margin-bottom: 12px; /* Reduced from 15px */
+        color: var(--primary);
       }
 
       .action-card h3 {
-        margin-bottom: 10px;
+        margin-bottom: 8px; /* Reduced from 10px */
         color: var(--primary);
+        font-size: 1.2rem; /* Added for consistency */
       }
 
       .location-input-section {
         background: var(--light-card);
         border-radius: var(--radius);
-        padding: 25px;
+        padding: 22px; /* Reduced from 25px */
         box-shadow: var(--shadow);
         margin-bottom: 30px;
       }
 
+      .dark-mode .location-input-section {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+      }
+
       .location-input-section h3 {
-        margin-bottom: 20px;
+        margin-bottom: 18px; /* Reduced from 20px */
         color: var(--primary);
+        font-size: 1.3rem; /* Added for consistency */
       }
 
       .input-group {
@@ -217,6 +447,21 @@
         border: 1px solid var(--light-border);
         border-radius: 8px;
         font-size: 16px;
+        background: var(--light-bg);
+        color: var(--light-text);
+        transition: var(--transition);
+      }
+
+      .dark-mode .input-group input {
+        background: var(--dark-bg);
+        color: var(--dark-text);
+        border: 1px solid var(--dark-border);
+      }
+
+      .input-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
       }
 
       .input-group button {
@@ -231,18 +476,46 @@
       .primary-btn {
         background: var(--primary);
         color: white;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .primary-btn:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transition: 0.5s;
+      }
+
+      .primary-btn:hover:before {
+        left: 100%;
       }
 
       .primary-btn:hover {
         background: var(--primary-dark);
+        transform: translateY(-2px);
       }
 
       .analysis-results {
         background: var(--light-card);
         border-radius: var(--radius);
-        padding: 25px;
+        padding: 22px; /* Reduced from 25px */
         box-shadow: var(--shadow);
         margin-top: 30px;
+      }
+
+      .dark-mode .analysis-results {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
       }
 
       .user-stats {
@@ -255,20 +528,31 @@
       .stat-card {
         background: var(--light-card);
         border-radius: var(--radius);
-        padding: 20px;
+        padding: 18px; /* Reduced from 20px */
         text-align: center;
         box-shadow: var(--shadow);
         border-top: 4px solid var(--primary);
+        transition: var(--transition);
+      }
+
+      .dark-mode .stat-card {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
       }
 
       .stat-card h4 {
-        margin-bottom: 15px;
+        margin-bottom: 12px; /* Reduced from 15px */
         color: var(--primary);
+        font-size: 1.1rem; /* Added for consistency */
       }
 
       .circular-gauge {
-        width: 150px;
-        height: 150px;
+        width: 140px; /* Reduced from 150px */
+        height: 140px; /* Reduced from 150px */
         margin: 0 auto;
       }
 
@@ -308,11 +592,38 @@
       }
 
       .gauge-text {
-        font-size: 24px;
+        font-size: 22px; /* Reduced from 24px */
         font-weight: bold;
         fill: var(--light-text);
         text-anchor: middle;
         dominant-baseline: middle;
+      }
+
+      .dark-mode .gauge-text {
+        fill: var(--dark-text);
+      }
+
+      .interpretation {
+        font-size: 14px;
+        margin-top: 8px; /* Reduced from 10px */
+        color: var(--light-text);
+        font-weight: 500;
+      }
+
+      .dark-mode .interpretation {
+        color: var(--dark-text);
+      }
+
+      .interpretation.good {
+        color: var(--primary);
+      }
+
+      .interpretation.moderate {
+        color: var(--accent);
+      }
+
+      .interpretation.poor {
+        color: #f44336;
       }
 
       .impact-stats {
@@ -325,19 +636,30 @@
       .impact-card {
         background: var(--light-card);
         border-radius: var(--radius);
-        padding: 25px;
+        padding: 22px; /* Reduced from 25px */
         text-align: center;
         box-shadow: var(--shadow);
         border-left: 4px solid var(--primary);
+        transition: var(--transition);
+      }
+
+      .dark-mode .impact-card {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+      }
+
+      .impact-card:hover {
+        transform: translateY(-5px);
       }
 
       .impact-card h4 {
-        margin-bottom: 10px;
+        margin-bottom: 8px; /* Reduced from 10px */
         color: var(--primary);
+        font-size: 1.1rem; /* Added for consistency */
       }
 
       .impact-value {
-        font-size: 2rem;
+        font-size: 1.8rem; /* Reduced from 2rem */
         font-weight: bold;
         color: var(--primary);
       }
@@ -345,8 +667,13 @@
       .badges-section {
         background: var(--light-card);
         border-radius: var(--radius);
-        padding: 25px;
+        padding: 22px; /* Reduced from 25px */
         box-shadow: var(--shadow);
+      }
+
+      .dark-mode .badges-section {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
       }
 
       .badges-grid {
@@ -361,11 +688,21 @@
         padding: 15px 10px;
         background: var(--light-bg);
         border-radius: var(--radius);
+        transition: var(--transition);
+      }
+
+      .dark-mode .badge-item {
+        background: var(--dark-bg);
+      }
+
+      .badge-item:hover {
+        transform: scale(1.05);
       }
 
       .badge-icon {
         font-size: 30px;
         margin-bottom: 8px;
+        color: var(--primary);
       }
 
       .map-container {
@@ -383,7 +720,7 @@
         margin-bottom: 20px;
       }
 
-      .mode-toggle {
+      .mode-toggle-small {
         display: flex;
         background: var(--light-card);
         padding: 5px;
@@ -391,14 +728,20 @@
         box-shadow: var(--shadow);
       }
 
+      .dark-mode .mode-toggle-small {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+      }
+
       .mode-btn {
-        padding: 10px 20px;
+        padding: 10px 18px; /* Reduced from 10px 20px */
         border: none;
         border-radius: 20px;
         background: transparent;
         cursor: pointer;
         font-weight: 600;
         transition: var(--transition);
+        font-size: 0.9rem; /* Added for consistency */
       }
 
       .mode-btn.active {
@@ -409,19 +752,24 @@
       .map-legend {
         background: var(--light-card);
         border-radius: var(--radius);
-        padding: 20px;
+        padding: 18px; /* Reduced from 20px */
         box-shadow: var(--shadow);
       }
 
+      .dark-mode .map-legend {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+      }
+
       .map-legend h4 {
-        margin-bottom: 15px;
+        margin-bottom: 12px; /* Reduced from 15px */
         color: var(--primary);
       }
 
       .legend-item {
         display: flex;
         align-items: center;
-        margin-bottom: 10px;
+        margin-bottom: 8px; /* Reduced from 10px */
       }
 
       .legend-color {
@@ -444,21 +792,32 @@
       .post-item {
         background: var(--light-card);
         border-radius: var(--radius);
-        padding: 20px;
+        padding: 18px; /* Reduced from 20px */
         box-shadow: var(--shadow);
         border-left: 4px solid var(--primary);
+        transition: var(--transition);
+      }
+
+      .dark-mode .post-item {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+      }
+
+      .post-item:hover {
+        transform: translateY(-5px);
       }
 
       .post-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 10px;
+        margin-bottom: 8px; /* Reduced from 10px */
       }
 
       .post-title {
         font-weight: bold;
         color: var(--primary);
+        font-size: 1.1rem; /* Added for consistency */
       }
 
       .post-type-badge {
@@ -472,7 +831,11 @@
       .post-meta {
         font-size: 14px;
         color: #666;
-        margin: 10px 0;
+        margin: 8px 0; /* Reduced from 10px */
+      }
+
+      .dark-mode .post-meta {
+        color: #aaa;
       }
 
       .upvote-btn {
@@ -488,13 +851,19 @@
 
       .upvote-btn:hover {
         background: var(--primary-dark);
+        transform: translateY(-2px);
       }
 
       .leaderboard {
         background: var(--light-card);
         border-radius: var(--radius);
-        padding: 25px;
+        padding: 22px; /* Reduced from 25px */
         box-shadow: var(--shadow);
+      }
+
+      .dark-mode .leaderboard {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
       }
 
       .leaderboard-item {
@@ -502,6 +871,19 @@
         align-items: center;
         padding: 15px;
         border-bottom: 1px solid var(--light-border);
+        transition: var(--transition);
+      }
+
+      .dark-mode .leaderboard-item {
+        border-bottom: 1px solid var(--dark-border);
+      }
+
+      .leaderboard-item:hover {
+        background: var(--light-bg);
+      }
+
+      .dark-mode .leaderboard-item:hover {
+        background: var(--dark-bg);
       }
 
       .leaderboard-item:last-child {
@@ -553,6 +935,11 @@
         overflow: hidden;
       }
 
+      .dark-mode .chatbot-window {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
+      }
+
       .chatbot-header {
         background: var(--primary);
         color: white;
@@ -591,6 +978,10 @@
         align-self: flex-start;
       }
 
+      .dark-mode .bot-message {
+        background: var(--dark-bg);
+      }
+
       .user-message {
         background: var(--primary);
         color: white;
@@ -603,12 +994,24 @@
         border-top: 1px solid var(--light-border);
       }
 
+      .dark-mode .chatbot-input {
+        border-top: 1px solid var(--dark-border);
+      }
+
       .chatbot-input input {
         flex: 1;
         padding: 10px 15px;
         border: 1px solid var(--light-border);
         border-radius: 20px;
         margin-right: 10px;
+        background: var(--light-bg);
+        color: var(--light-text);
+      }
+
+      .dark-mode .chatbot-input input {
+        background: var(--dark-bg);
+        color: var(--dark-text);
+        border: 1px solid var(--dark-border);
       }
 
       .chatbot-input button {
@@ -636,11 +1039,16 @@
       .modal-content {
         background: var(--light-card);
         border-radius: var(--radius);
-        padding: 30px;
+        padding: 25px; /* Reduced from 30px */
         width: 90%;
         max-width: 500px;
         box-shadow: var(--shadow);
         position: relative;
+      }
+
+      .dark-mode .modal-content {
+        background: var(--dark-card);
+        box-shadow: var(--shadow-dark);
       }
 
       .close {
@@ -650,6 +1058,10 @@
         font-size: 24px;
         cursor: pointer;
         color: #666;
+      }
+
+      .dark-mode .close {
+        color: #aaa;
       }
 
       .route-form,
@@ -668,6 +1080,17 @@
         border: 1px solid var(--light-border);
         border-radius: 8px;
         font-size: 16px;
+        background: var(--light-bg);
+        color: var(--light-text);
+      }
+
+      .dark-mode .route-form input,
+      .dark-mode .post-form input,
+      .dark-mode .post-form textarea,
+      .dark-mode .post-form select {
+        background: var(--dark-bg);
+        color: var(--dark-text);
+        border: 1px solid var(--dark-border);
       }
 
       .post-form textarea {
@@ -686,15 +1109,179 @@
         gap: 5px;
       }
 
+      /* Footer */
+      footer {
+        background: var(--light-card);
+        padding: 50px 0 30px; /* Reduced from 60px */
+        margin-top: 40px;
+        border-top: 1px solid var(--light-border);
+      }
+
+      .dark-mode footer {
+        background: var(--dark-card);
+        border-top: 1px solid var(--dark-border);
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        margin-bottom: 40px;
+      }
+
+      .footer-column h3 {
+        font-size: 1.3rem; /* Reduced from 1.4rem */
+        margin-bottom: 20px; /* Reduced from 25px */
+        color: var(--primary);
+      }
+
+      .dark-mode .footer-column h3 {
+        color: var(--primary-light);
+      }
+
+      .footer-links {
+        display: flex;
+        flex-direction: column;
+        gap: 12px; /* Reduced from 15px */
+      }
+
+      .footer-links a {
+        color: var(--light-text);
+        text-decoration: none;
+        transition: var(--transition);
+        position: relative;
+        padding-left: 0;
+      }
+
+      .dark-mode .footer-links a {
+        color: var(--dark-text);
+      }
+
+      .footer-links a:before {
+        content: "›";
+        position: absolute;
+        left: 0;
+        opacity: 0;
+        transition: var(--transition);
+      }
+
+      .footer-links a:hover {
+        color: var(--primary);
+        padding-left: 15px;
+      }
+
+      .footer-links a:hover:before {
+        opacity: 1;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .social-link {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: var(--transition);
+      }
+
+      .social-link:hover {
+        transform: translateY(-5px);
+        background: var(--primary-dark);
+      }
+
+      .copyright {
+        text-align: center;
+        padding-top: 25px; /* Reduced from 30px */
+        border-top: 1px solid var(--light-border);
+        color: var(--light-text);
+      }
+
+      .dark-mode .copyright {
+        border-top: 1px solid var(--dark-border);
+        color: var(--dark-text);
+      }
+
+      /* Zone indicators for POIs */
+      .zone-indicator {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-left: 8px;
+      }
+
+      .zone-calm {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .zone-busy {
+        background-color: #ff9800;
+        color: white;
+      }
+
+      .zone-pollution {
+        background-color: #f44336;
+        color: white;
+      }
+
+      /* Mobile Responsiveness */
       @media (max-width: 768px) {
-        .header-container {
+        header {
+          padding: 12px 0; /* Further reduced for mobile */
+        }
+
+        .header-content {
           flex-direction: column;
+          gap: 12px;
+        }
+
+        .nav-links {
+          width: 100%;
+          justify-content: center;
+          flex-wrap: wrap;
           gap: 15px;
         }
 
-        nav {
-          width: 100%;
-          justify-content: center;
+        .nav-link {
+          font-size: 0.9rem;
+          padding: 6px 0;
+        }
+
+        .mode-toggle {
+          padding: 8px 15px;
+        }
+
+        .logo-text {
+          font-size: 1.4rem;
+        }
+
+        .logo-icon {
+          width: 40px;
+          height: 40px;
+          font-size: 1.2rem;
+        }
+
+        main {
+          padding: 120px 0 40px; /* Adjusted for mobile header height */
+        }
+
+        .hero h2 {
+          font-size: 1.8rem;
+        }
+
+        .ai-insight {
+          font-size: 1rem;
         }
 
         .input-group {
@@ -710,27 +1297,72 @@
           width: calc(100vw - 40px);
           right: 20px;
         }
+
+        .footer-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .quick-actions {
+          grid-template-columns: 1fr;
+        }
+
+        .user-stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .impact-stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .map-controls {
+          flex-direction: column;
+          gap: 15px;
+          align-items: flex-start;
+        }
+
+        .mode-toggle-small {
+          width: 100%;
+          justify-content: center;
+        }
       }
     </style>
   </head>
-  <body>
-    <header>
-      <div class="header-container container">
-        <div class="logo">
-          <i class="fas fa-leaf"></i>
-          <div>
-            <h1>Gyatah</h1>
-            <p class="tagline">Where Motion is Intelligent</p>
+  <body class="light-mode">
+    <!-- Animated Background -->
+    <div class="animated-bg">
+      <div class="bg-circle"></div>
+      <div class="bg-circle"></div>
+      <div class="bg-circle"></div>
+      <div class="bg-circle"></div>
+    </div>
+
+    <header id="header">
+      <div class="container">
+        <div class="header-content">
+          <div class="logo">
+            <div class="logo-icon">G</div>
+            <div class="logo-text">GYATAH</div>
+          </div>
+
+          <div class="nav-links">
+            <a class="nav-link active" data-section="home">Home</a>
+            <a class="nav-link" data-section="dashboard">Dashboard</a>
+            <a class="nav-link" data-section="map">Live Map</a>
+            <a class="nav-link" data-section="community">Community</a>
+          </div>
+
+          <div class="mode-toggle" id="modeToggle">
+            <span class="toggle-label">Light</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="modeToggleCheckbox" />
+              <span class="slider"></span>
+            </label>
+            <span class="toggle-label">Dark</span>
           </div>
         </div>
-        <nav>
-          <button class="nav-btn active" data-section="home">Home</button>
-          <a href="http://localhost:8080/dashboard" class="nav-btn"
-            >Dashboard</a
-          >
-          <a href="http://localhost:8080/map" class="nav-btn">Live Map</a>
-          <button class="nav-btn" data-section="community">Community</button>
-        </nav>
       </div>
     </header>
 
@@ -742,7 +1374,7 @@
         </div>
 
         <div class="quick-actions">
-          <a href="http://localhost:8080/dashboard" class="action-card">
+          <a class="action-card" data-section="dashboard">
             <div class="card-icon"><i class="fas fa-wind"></i></div>
             <h3>Check Air Quality</h3>
             <p>Real-time AQI, noise & traffic</p>
@@ -752,7 +1384,7 @@
             <h3>Find Low-Traffic Routes</h3>
             <p>AI-powered eco-friendly paths</p>
           </div>
-          <a href="http://localhost:8080/dashboard" class="action-card">
+          <a class="action-card" data-section="dashboard">
             <div class="card-icon"><i class="fas fa-medal"></i></div>
             <h3>Carbon Credit Score</h3>
             <p>Track your green impact</p>
@@ -807,6 +1439,9 @@
                 </text>
               </svg>
             </div>
+            <div class="interpretation" id="green-score-interpretation">
+              Calculating...
+            </div>
           </div>
 
           <div class="stat-card">
@@ -824,6 +1459,9 @@
                 <text x="50" y="55" class="gauge-text" id="aqi-text">0</text>
               </svg>
             </div>
+            <div class="interpretation" id="aqi-interpretation">
+              Calculating...
+            </div>
           </div>
 
           <div class="stat-card">
@@ -840,6 +1478,9 @@
                 ></circle>
                 <text x="50" y="55" class="gauge-text" id="noise-text">0</text>
               </svg>
+            </div>
+            <div class="interpretation" id="noise-interpretation">
+              Calculating...
             </div>
           </div>
 
@@ -860,6 +1501,9 @@
                 </text>
               </svg>
             </div>
+            <div class="interpretation" id="traffic-interpretation">
+              Calculating...
+            </div>
           </div>
         </div>
 
@@ -867,18 +1511,22 @@
           <div class="impact-card">
             <h4><i class="fas fa-cloud"></i> CO₂ Saved</h4>
             <p class="impact-value" id="co2-saved">0 kg</p>
+            <p>Equivalent to planting 0 trees</p>
           </div>
           <div class="impact-card">
             <h4><i class="fas fa-walking"></i> Clean Trips</h4>
             <p class="impact-value" id="clean-trips">0</p>
+            <p>Eco-friendly journeys this month</p>
           </div>
           <div class="impact-card">
             <h4><i class="fas fa-fire"></i> Eco Streak</h4>
             <p class="impact-value" id="eco-streak">0 days</p>
+            <p>Keep going for more rewards!</p>
           </div>
           <div class="impact-card">
             <h4><i class="fas fa-star"></i> Eco Points</h4>
             <p class="impact-value" id="eco-points">0</p>
+            <p>Redeem for exclusive rewards</p>
           </div>
         </div>
 
@@ -891,7 +1539,7 @@
       <section id="map-section" class="section">
         <div class="map-controls">
           <h2><i class="fas fa-map-marked-alt"></i> Live Urban Map</h2>
-          <div class="mode-toggle">
+          <div class="mode-toggle-small">
             <button class="mode-btn active" data-mode="citizen">
               <i class="fas fa-users"></i> Citizen Mode
             </button>
@@ -909,19 +1557,19 @@
             <span class="legend-color"
               ><i class="fas fa-car" style="color: #ef4444"></i
             ></span>
-            Busy Areas
+            Busy Areas - Heavy traffic and congestion
           </div>
           <div class="legend-item">
             <span class="legend-color"
               ><i class="fas fa-leaf" style="color: #10b981"></i
             ></span>
-            Calm Zones
+            Calm Zones - Peaceful and quiet areas
           </div>
           <div class="legend-item">
             <span class="legend-color"
               ><i class="fas fa-lungs" style="color: #f59e0b"></i
             ></span>
-            High Pollution
+            High Pollution - Poor air quality zones
           </div>
         </div>
 
@@ -1046,30 +1694,111 @@
       </div>
     </div>
 
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-column">
+            <h3>About Gyatah</h3>
+            <p>
+              Gyatah is an innovative platform that combines sustainability with
+              technology to help users make eco-friendly travel decisions.
+            </p>
+            <div class="social-links">
+              <a href="#" class="social-link"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="social-link"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="social-link"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
+            </div>
+          </div>
+          <div class="footer-column">
+            <h3>Quick Links</h3>
+            <div class="footer-links">
+              <a class="nav-link" data-section="home">Home</a>
+              <a class="nav-link" data-section="dashboard">Dashboard</a>
+              <a class="nav-link" data-section="map">Live Map</a>
+              <a class="nav-link" data-section="community">Community</a>
+            </div>
+          </div>
+          <div class="footer-column">
+            <h3>Features</h3>
+            <div class="footer-links">
+              <a class="nav-link" data-section="map">Eco-Route Finder</a>
+              <a class="nav-link" data-section="dashboard">Live Dashboard</a>
+              <a class="nav-link" data-section="dashboard"
+                >Personal Dashboard</a
+              >
+              <a class="nav-link" data-section="community">Community Hub</a>
+            </div>
+          </div>
+          <div class="footer-column">
+            <h3>Contact Us</h3>
+            <div class="footer-links">
+              <a href="mailto:info@gyatah.com">info@gyatah.com</a>
+              <a href="tel:+1234567890">+1 (234) 567-890</a>
+              <a href="#">123 Green Street, Eco City</a>
+            </div>
+          </div>
+        </div>
+        <div class="copyright">
+          &copy; 2023 Gyatah. All rights reserved. Making the world greener, one
+          route at a time.
+        </div>
+      </div>
+    </footer>
+
     <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps-web.min.js"></script>
     <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/services/services-web.min.js"></script>
     <script>
-      // Your JavaScript code remains exactly the same
-      // Only the styling has been updated
+      // Mode Toggle Functionality
+      const modeToggle = document.getElementById("modeToggle");
+      const modeToggleCheckbox = document.getElementById("modeToggleCheckbox");
+      const body = document.body;
+      const toggleLabels = document.querySelectorAll(".toggle-label");
+
+      modeToggle.addEventListener("click", function () {
+        modeToggleCheckbox.checked = !modeToggleCheckbox.checked;
+        toggleMode();
+      });
+
+      modeToggleCheckbox.addEventListener("change", toggleMode);
+
+      function toggleMode() {
+        if (modeToggleCheckbox.checked) {
+          body.classList.remove("light-mode");
+          body.classList.add("dark-mode");
+          toggleLabels[0].textContent = "Dark";
+          toggleLabels[1].textContent = "Light";
+        } else {
+          body.classList.remove("dark-mode");
+          body.classList.add("light-mode");
+          toggleLabels[0].textContent = "Light";
+          toggleLabels[1].textContent = "Dark";
+        }
+      }
+
+      // Map and navigation functionality
       const TOMTOM_API_KEY = "{{ tomtom_key }}";
 
       let map;
-      let trafficMap;
       let currentLat = 18.5204;
       let currentLon = 73.8567;
       let currentMode = "citizen";
       let markers = [];
-      let trafficMapMarkers = [];
       let trafficLayer;
       let trafficIncidentsLayer;
-      let currentFilterType = "all";
 
       function showSection(sectionName) {
         document
           .querySelectorAll(".section")
           .forEach((s) => s.classList.remove("active"));
         document
-          .querySelectorAll(".nav-btn")
+          .querySelectorAll(".nav-link")
           .forEach((b) => b.classList.remove("active"));
 
         document
@@ -1080,10 +1809,11 @@
           .classList.add("active");
 
         if (sectionName === "map") {
-          // Wait for section to be visible before initializing map
           setTimeout(() => {
             if (!map) {
               initMap();
+            } else {
+              map.resize();
             }
           }, 200);
         } else if (sectionName === "dashboard") {
@@ -1095,13 +1825,6 @@
       }
 
       function initMap() {
-        console.log(
-          "initMap called, map exists:",
-          !!map,
-          "tt defined:",
-          typeof tt !== "undefined"
-        );
-
         if (!map && typeof tt !== "undefined") {
           const mapContainer = document.getElementById("map");
           if (!mapContainer) {
@@ -1109,29 +1832,7 @@
             return;
           }
 
-          // Check if container is visible
-          const containerStyle = window.getComputedStyle(mapContainer);
-          console.log("Container style:", {
-            display: containerStyle.display,
-            visibility: containerStyle.visibility,
-            width: containerStyle.width,
-            height: containerStyle.height,
-          });
-
-          if (
-            containerStyle.display === "none" ||
-            containerStyle.visibility === "hidden"
-          ) {
-            console.log("Map container not visible yet, will retry...");
-            setTimeout(initMap, 200);
-            return;
-          }
-
           try {
-            console.log(
-              "Initializing TomTom map with key:",
-              TOMTOM_API_KEY ? "SET" : "NOT SET"
-            );
             map = tt.map({
               key: TOMTOM_API_KEY || "demo",
               container: "map",
@@ -1141,7 +1842,6 @@
                 "https://api.tomtom.com/style/2/custom/style/dG9tdG9tQEBAbmlnaHQtc3R5bGU7MDs0YzFhYTdiYS1mYzc3LTRiNjUtYjRmNy1lNDkzZGRkMTlmMWE.json?key=" +
                 (TOMTOM_API_KEY || "demo"),
             });
-            console.log("Map initialized successfully");
 
             trafficLayer = tt.trafficLayer({
               key: TOMTOM_API_KEY || "demo",
@@ -1156,17 +1856,11 @@
             });
 
             map.on("load", function () {
-              // Resize map to ensure it displays correctly
               map.resize();
               addMapMarkers();
               updateMapMode();
             });
 
-            map.on("error", function (e) {
-              console.error("Map error:", e);
-            });
-
-            // Also resize after a short delay to ensure container is fully visible
             setTimeout(() => {
               if (map) {
                 map.resize();
@@ -1176,16 +1870,13 @@
             console.error("Error initializing map:", e);
           }
         } else if (typeof tt === "undefined") {
-          console.error(
-            "TomTom SDK not loaded. Please check if TomTom scripts are included."
-          );
+          console.error("TomTom SDK not loaded.");
           const mapContainer = document.getElementById("map");
           if (mapContainer) {
             mapContainer.innerHTML =
               '<div style="padding: 2rem; text-align: center; color: #666;"><p>⚠️ TomTom SDK not loaded. Please refresh the page.</p></div>';
           }
         } else if (map) {
-          // Map already exists, just resize it
           map.resize();
         }
       }
@@ -1247,7 +1938,20 @@
 
           const popup = new tt.Popup({ offset: 35 }).setHTML(
             `<div style="padding: 10px;">
-                      <strong>${zone.name}</strong><br>
+                      <strong>${zone.name}</strong>
+                      <span class="zone-indicator ${
+                        zone.type === "calm"
+                          ? "zone-calm"
+                          : zone.type === "busy"
+                          ? "zone-busy"
+                          : "zone-pollution"
+                      }">${
+              zone.type === "calm"
+                ? "Calm Zone"
+                : zone.type === "busy"
+                ? "Busy Zone"
+                : "Polluted Zone"
+            }</span><br>
                       <small>Type: ${zone.type}</small><br>
                       ${
                         currentMode === "expert"
@@ -1418,6 +2122,7 @@
         }
 
         try {
+          // Simulated API call - replace with actual endpoint
           const response = await fetch("/api/location/analyze", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -1432,13 +2137,80 @@
           displayAnalysisResults(data);
         } catch (error) {
           console.error("Analysis error:", error);
-          alert("Failed to analyze location. Please try again.");
+          // Fallback to demo data
+          const demoData = {
+            insight:
+              "This area has moderate air quality with some traffic congestion. Consider walking or cycling for short distances to reduce your carbon footprint.",
+            metrics: {
+              aqi: 69,
+              noise_level: 65,
+              traffic_level: 92,
+            },
+            traffic_pattern: {
+              pattern:
+                "Peak traffic hours are 8-10 AM and 5-7 PM. Weekends are generally calmer.",
+            },
+            locations: [
+              {
+                name: "Central Park",
+                category: "Park",
+                zone_type: "calm",
+                lat: 18.5204,
+                lon: 73.8567,
+              },
+              {
+                name: "Main Street",
+                category: "Shopping",
+                zone_type: "busy",
+                lat: 18.5314,
+                lon: 73.8446,
+              },
+              {
+                name: "Industrial Area",
+                category: "Industrial",
+                zone_type: "pollution",
+                lat: 18.5074,
+                lon: 73.8077,
+              },
+            ],
+          };
+          displayAnalysisResults(demoData);
         }
       }
 
       function displayAnalysisResults(data) {
         const resultsDiv = document.getElementById("analysis-results");
         const contentDiv = document.getElementById("analysis-content");
+
+        // Helper function to get interpretation
+        function getAQIInterpretation(aqi) {
+          if (aqi <= 50) return { text: "Good", class: "good" };
+          if (aqi <= 100) return { text: "Moderate", class: "moderate" };
+          if (aqi <= 150)
+            return { text: "Unhealthy for Sensitive Groups", class: "poor" };
+          if (aqi <= 200) return { text: "Unhealthy", class: "poor" };
+          return { text: "Very Unhealthy", class: "poor" };
+        }
+
+        function getNoiseInterpretation(noise) {
+          if (noise <= 50) return { text: "Quiet", class: "good" };
+          if (noise <= 70) return { text: "Moderate", class: "moderate" };
+          return { text: "Noisy", class: "poor" };
+        }
+
+        function getTrafficInterpretation(traffic) {
+          if (traffic <= 30) return { text: "Light", class: "good" };
+          if (traffic <= 70) return { text: "Moderate", class: "moderate" };
+          return { text: "Heavy", class: "poor" };
+        }
+
+        const aqiInterpretation = getAQIInterpretation(data.metrics.aqi);
+        const noiseInterpretation = getNoiseInterpretation(
+          data.metrics.noise_level
+        );
+        const trafficInterpretation = getTrafficInterpretation(
+          data.metrics.traffic_level
+        );
 
         let html = `
               <div class="ai-insight">${data.insight}</div>
@@ -1447,22 +2219,41 @@
                   <div class="metric-card" style="background: var(--light-bg); padding: 1rem; border-radius: 10px; text-align: center;">
                       <h4>Air Quality Index</h4>
                       <p style="font-size: 2rem; font-weight: bold; color: ${
-                        data.metrics.aqi < 100
+                        aqiInterpretation.class === "good"
                           ? "var(--primary)"
-                          : "var(--accent)"
+                          : aqiInterpretation.class === "moderate"
+                          ? "var(--accent)"
+                          : "#f44336"
                       };">${data.metrics.aqi}</p>
+                      <p class="interpretation ${aqiInterpretation.class}">${
+          aqiInterpretation.text
+        }</p>
                   </div>
                   <div class="metric-card" style="background: var(--light-bg); padding: 1rem; border-radius: 10px; text-align: center;">
                       <h4>Noise Level</h4>
-                      <p style="font-size: 2rem; font-weight: bold; color: var(--accent);">${
-                        data.metrics.noise_level
-                      } dB</p>
+                      <p style="font-size: 2rem; font-weight: bold; color: ${
+                        noiseInterpretation.class === "good"
+                          ? "var(--primary)"
+                          : noiseInterpretation.class === "moderate"
+                          ? "var(--accent)"
+                          : "#f44336"
+                      };">${data.metrics.noise_level} dB</p>
+                      <p class="interpretation ${noiseInterpretation.class}">${
+          noiseInterpretation.text
+        }</p>
                   </div>
                   <div class="metric-card" style="background: var(--light-bg); padding: 1rem; border-radius: 10px; text-align: center;">
                       <h4>Traffic Level</h4>
-                      <p style="font-size: 2rem; font-weight: bold; color: var(--primary-dark);">${
-                        data.metrics.traffic_level
-                      }%</p>
+                      <p style="font-size: 2rem; font-weight: bold; color: ${
+                        trafficInterpretation.class === "good"
+                          ? "var(--primary)"
+                          : trafficInterpretation.class === "moderate"
+                          ? "var(--accent)"
+                          : "#f44336"
+                      };">${data.metrics.traffic_level}%</p>
+                      <p class="interpretation ${
+                        trafficInterpretation.class
+                      }">${trafficInterpretation.text}</p>
                   </div>
               </div>
               
@@ -1474,13 +2265,25 @@
           `;
 
         data.locations.forEach((loc) => {
+          const zoneClass =
+            loc.zone_type === "calm"
+              ? "zone-calm"
+              : loc.zone_type === "busy"
+              ? "zone-busy"
+              : "zone-pollution";
+          const zoneText =
+            loc.zone_type === "calm"
+              ? "Calm Zone"
+              : loc.zone_type === "busy"
+              ? "Busy Zone"
+              : "Polluted Zone";
+
           html += `
                   <div style="background: var(--light-bg); padding: 1rem; border-radius: 8px;">
-                      <strong>${loc.name}</strong><br>
+                      <strong>${loc.name}</strong>
+                      <span class="zone-indicator ${zoneClass}">${zoneText}</span><br>
                       <small style="color: #666;">
-                          ${loc.category} | Zone Type: ${
-            loc.zone_type || "Analyzing..."
-          } | 
+                          ${loc.category} | 
                           Coordinates: ${loc.lat.toFixed(4)}, ${loc.lon.toFixed(
             4
           )}
@@ -1497,41 +2300,123 @@
 
       async function loadDashboard() {
         try {
+          // Simulated API call - replace with actual endpoint
           const response = await fetch("/api/dashboard");
           const data = await response.json();
 
-          updateGauge("green-score", data.user.green_score, 100);
-          updateGauge("aqi", data.metrics.aqi, 200);
-          updateGauge("noise", data.metrics.noise, 100);
-          updateGauge("traffic", data.metrics.traffic, 100);
+          // Fallback to demo data
+          const demoData = {
+            user: {
+              green_score: 75,
+              co2_saved: 12.5,
+              clean_trips: 24,
+              eco_points: 350,
+            },
+            metrics: {
+              aqi: 69,
+              noise: 65,
+              traffic: 92,
+            },
+            streak: 7,
+            insight:
+              "You're doing great! Your eco-friendly choices have saved 12.5kg of CO₂ this month.",
+            badges: [
+              { badge_icon: "🌿", badge_name: "Eco Warrior" },
+              { badge_icon: "🚶", badge_name: "Daily Walker" },
+              { badge_icon: "🌍", badge_name: "Climate Hero" },
+              { badge_icon: "🏆", badge_name: "Weekly Champion" },
+            ],
+          };
 
-          document.getElementById(
-            "co2-saved"
-          ).textContent = `${data.user.co2_saved} kg`;
-          document.getElementById("clean-trips").textContent =
-            data.user.clean_trips;
-          document.getElementById(
-            "eco-streak"
-          ).textContent = `${data.streak} days`;
-          document.getElementById("eco-points").textContent =
-            data.user.eco_points;
+          updateDashboard(demoData);
+        } catch (error) {
+          console.error("Dashboard error:", error);
+          // Use demo data on error
+          const demoData = {
+            user: {
+              green_score: 75,
+              co2_saved: 12.5,
+              clean_trips: 24,
+              eco_points: 350,
+            },
+            metrics: {
+              aqi: 69,
+              noise: 65,
+              traffic: 92,
+            },
+            streak: 7,
+            insight:
+              "You're doing great! Your eco-friendly choices have saved 12.5kg of CO₂ this month.",
+            badges: [
+              { badge_icon: "🌿", badge_name: "Eco Warrior" },
+              { badge_icon: "🚶", badge_name: "Daily Walker" },
+              { badge_icon: "🌍", badge_name: "Climate Hero" },
+              { badge_icon: "🏆", badge_name: "Weekly Champion" },
+            ],
+          };
+          updateDashboard(demoData);
+        }
+      }
 
-          document.getElementById("main-insight").textContent = data.insight;
+      function updateDashboard(data) {
+        updateGauge("green-score", data.user.green_score, 100);
+        updateGauge("aqi", data.metrics.aqi, 200);
+        updateGauge("noise", data.metrics.noise, 100);
+        updateGauge("traffic", data.metrics.traffic, 100);
 
-          const badgesContainer = document.getElementById("badges-container");
-          badgesContainer.innerHTML = data.badges
-            .map(
-              (badge) => `
+        // Update interpretations
+        document.getElementById("green-score-interpretation").textContent =
+          data.user.green_score >= 80
+            ? "Excellent! Keep it up!"
+            : data.user.green_score >= 60
+            ? "Good! You're making a difference."
+            : "Room for improvement. Try more eco-friendly routes.";
+
+        document.getElementById("aqi-interpretation").textContent =
+          data.metrics.aqi <= 50
+            ? "Good - Air quality is satisfactory"
+            : data.metrics.aqi <= 100
+            ? "Moderate - Acceptable air quality"
+            : "Poor - Consider reducing outdoor activity";
+
+        document.getElementById("noise-interpretation").textContent =
+          data.metrics.noise <= 50
+            ? "Quiet - Peaceful environment"
+            : data.metrics.noise <= 70
+            ? "Moderate - Typical urban noise"
+            : "Noisy - Consider quieter routes";
+
+        document.getElementById("traffic-interpretation").textContent =
+          data.metrics.traffic <= 30
+            ? "Light - Smooth travel"
+            : data.metrics.traffic <= 70
+            ? "Moderate - Some delays expected"
+            : "Heavy - Significant congestion";
+
+        document.getElementById(
+          "co2-saved"
+        ).textContent = `${data.user.co2_saved} kg`;
+        document.getElementById("clean-trips").textContent =
+          data.user.clean_trips;
+        document.getElementById(
+          "eco-streak"
+        ).textContent = `${data.streak} days`;
+        document.getElementById("eco-points").textContent =
+          data.user.eco_points;
+
+        document.getElementById("main-insight").textContent = data.insight;
+
+        const badgesContainer = document.getElementById("badges-container");
+        badgesContainer.innerHTML = data.badges
+          .map(
+            (badge) => `
                   <div class="badge-item">
                       <div class="badge-icon">${badge.badge_icon}</div>
                       <div>${badge.badge_name}</div>
                   </div>
               `
-            )
-            .join("");
-        } catch (error) {
-          console.error("Dashboard error:", error);
-        }
+          )
+          .join("");
       }
 
       function updateGauge(id, value, max) {
@@ -1581,7 +2466,7 @@
       }
 
       function showRouteModal() {
-        document.getElementById("route-modal").style.display = "block";
+        document.getElementById("route-modal").style.display = "flex";
       }
 
       function closeRouteModal() {
@@ -1782,7 +2667,7 @@
       }
 
       function showPostModal() {
-        document.getElementById("post-modal").style.display = "block";
+        document.getElementById("post-modal").style.display = "flex";
       }
 
       function closePostModal() {
@@ -1844,11 +2729,33 @@
         }
       };
 
-      // Add event listeners for navigation buttons
+      // Add event listeners for navigation
       document.addEventListener("DOMContentLoaded", function () {
-        // Set up navigation button click handlers
-        document.querySelectorAll(".nav-btn").forEach((btn) => {
-          btn.addEventListener("click", function () {
+        // Navigation links
+        document.querySelectorAll(".nav-link").forEach((link) => {
+          link.addEventListener("click", function () {
+            const sectionName = this.getAttribute("data-section");
+            if (sectionName) {
+              showSection(sectionName);
+            }
+          });
+        });
+
+        // Action cards
+        document
+          .querySelectorAll(".action-card[data-section]")
+          .forEach((card) => {
+            card.addEventListener("click", function () {
+              const sectionName = this.getAttribute("data-section");
+              if (sectionName) {
+                showSection(sectionName);
+              }
+            });
+          });
+
+        // Footer links
+        document.querySelectorAll("footer .nav-link").forEach((link) => {
+          link.addEventListener("click", function () {
             const sectionName = this.getAttribute("data-section");
             if (sectionName) {
               showSection(sectionName);

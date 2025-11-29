@@ -835,17 +835,22 @@
       <div class="container">
         <div class="header-content">
           <div class="logo">
-            <div class="logo-icon">
-              <i class="fas fa-leaf"></i>
+            <div class="intro-logo" style="background: none; box-shadow: none">
+              <img
+                src="{{ url_for('static', filename='Logo.png') }}"
+                alt="Logo"
+                style="width: 50px; height: auto"
+              />
             </div>
+
             <div class="logo-text">GYATAH</div>
           </div>
 
           <div class="nav-links">
-            <a href="#" class="nav-link">Dashboard</a>
-            <a href="#" class="nav-link">Eco-Routes</a>
-            <a href="#" class="nav-link">Challenges</a>
-            <a href="#" class="nav-link">Community</a>
+            <a href="personal-dashboard.html" class="nav-link">Dashboard</a>
+            <a href="http://localhost:8080/map" class="nav-link">Eco-Routes</a>
+            <a href="gamification.html" class="nav-link">Challenges</a>
+            <a href="community.html" class="nav-link">Community</a>
             <a href="#" class="nav-link">Profile</a>
           </div>
 
@@ -863,7 +868,7 @@
 
     <section class="chatbot">
       <div class="container">
-        <a href="#" class="back-button">
+        <a href="landing.html" class="back-button">
           <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
         </a>
 
@@ -1055,21 +1060,22 @@
           <div class="footer-column">
             <h3>Quick Links</h3>
             <div class="footer-links">
-              <a href="#">Home</a>
-              <a href="#">Dashboard</a>
-              <a href="#">Eco-Routes</a>
-              <a href="#">Challenges</a>
-              <a href="#">Community</a>
+              <a href="home.html">Home</a>
+              <a href="landing.html">Features</a>
+              <a href="#">How It Works</a>
+              <a href="#">Testimonials</a>
+              <a href="#">Contact</a>
             </div>
           </div>
           <div class="footer-column">
             <h3>Features</h3>
             <div class="footer-links">
-              <a href="#">Eco-Route Finder</a>
-              <a href="#">Live Dashboard</a>
-              <a href="#">Personal Dashboard</a>
-              <a href="#">Gamification</a>
-              <a href="#">AI Chatbot</a>
+              <a href="http://localhost:8080/map">Eco-Route Finder</a>
+              <a href="http://127.0.0.1:5000/">Live Location Dashboard</a>
+              <a href="personal-dashboard.html">Personal Dashboard</a>
+              <a href="gamification.html">Gamification</a>
+              <a href="chatbot.html">AI Chatbot</a>
+              <a href="community.html">Community Hub</a>
             </div>
           </div>
           <div class="footer-column">
@@ -1077,13 +1083,13 @@
             <div class="footer-links">
               <a href="mailto:info@gyatah.com">info@gyatah.com</a>
               <a href="tel:+1234567890">+1 (234) 567-890</a>
-              <a href="#">123 Green Street, Eco City</a>
+              <a href="#">123 Green Street, Katalyst</a>
             </div>
           </div>
         </div>
         <div class="copyright">
-          &copy; 2023 Gyatah. All rights reserved. Making the world greener, one
-          route at a time.
+          &copy; 2025 Gyatah . All rights reserved. Making the world greener,
+          one route at a time.
         </div>
       </div>
     </footer>

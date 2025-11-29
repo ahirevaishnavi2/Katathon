@@ -1,0 +1,19 @@
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* change to center if needed */
+  padding: 10px;
+}
+
+.intro-logo {
+  background: none;
+  box-shadow: none;
+  display: inline-block;
+}
+
+.logo-img {
+  width: 50px;
+  height: auto;
+  object-fit: contain; /* keeps proportions */
+  display: block; /* removes inline spacing */
+}
