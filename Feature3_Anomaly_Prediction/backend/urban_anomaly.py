@@ -1,25 +1,4 @@
 #!/usr/bin/env python3
-"""
-Gyatah — Urban Anomaly Engine (menu-driven) + Visualization & Report
-
-Run:
-    python gyatah_uae_with_report.py
-
-Features:
-- Interactive menu: provide Pune Smart City CSV and AQI CSV (or press Enter to use demo data)
-- Basic parameter inputs (z-score threshold, relative jump threshold)
-- Hourly alignment, smoothing, simple anomaly detection on pollution & traffic signals
-- Outputs anomalies.csv (user path) AND generates:
-    - pm25_timeseries.png
-    - anomaly_counts.png
-    - anomaly_timeline.png
-    - gyatah_anomaly_report.pdf
-    - anomalies.csv (saved earlier)
-- New: lightweight upcoming-anomaly predictor + alert notification for a user-specified horizon window
-- Dependencies: pandas, numpy, matplotlib
-Install:
-    pip install pandas numpy matplotlib
-"""
 
 from datetime import datetime
 import os
@@ -729,4 +708,5 @@ def run_analysis_with_params(params):
             'parameters_used': params
         }
         with open('analysis_error.json', 'w') as f:
+
             json.dump(error_summary, f, indent=2)
